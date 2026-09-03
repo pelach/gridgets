@@ -35,6 +35,7 @@ import { createWidgetNode } from './widgetFactory.js';
 import { attachDragHandlers } from './dragDrop.js';
 import {
     openContextMenu,
+    removeContextMenu,
 } from './contextMenu.js';
 import { isActorDestroyed, watchActorLifecycle } from '../utils/actorLifecycle.js';
 import { resolveWeatherLayoutVariant } from '../widgets/weather/weatherCommon.js';
@@ -110,16 +111,7 @@ export const DesktopGrid = GObject.registerClass(
 
             this.interfaceSettings = null;
 
-            if (this.contextMenu) {
-                this.contextMenu.destroy();
-                this.contextMenu = null;
-            }
-
-            if (this._contextMenuDummyActor) {
-                const dummyParent = this._contextMenuDummyActor.get_parent();
-                if (dummyParent) dummyParent.remove_child(this._contextMenuDummyActor);
-                this._contextMenuDummyActor = null;
-            }
+            removeContextMenu(this);
 
             if (this._backgroundPressId) {
                 this.disconnect(this._backgroundPressId);
