@@ -5,7 +5,8 @@ import { SECONDARY_OPACITY, cssColorToRgba, getGridgetsDataDir, loadJsonFromFile
 import {
     createWidgetContainer,
     connectTimerCleanup,
-    startPollingTimer
+    startPollingTimer,
+    attachResponsiveScaler
 } from '../shell/widgetUIUtils.js';
 import { BUTTON_PRIMARY } from '../desktopGrid/constants.js';
 import { isActorDestroyed } from '../utils/actorLifecycle.js';
@@ -26,6 +27,9 @@ const ITEM_PADDING_V_PX = 9;
 const ITEM_PADDING_H_PX = 11;
 const LIST_SPACING_PX = 6;
 
+const REF_WIDTH_PX = 240;
+const REF_HEIGHT_PX = 160;
+
 export function createClipboardNode(config, width, height, xPosition, yPosition) {
     const fontFamily = resolveExplicitFontFamily(config);
     const fontCss = fontFamily ? `font-family: ${fontFamily}; ` : '';
@@ -34,9 +38,7 @@ export function createClipboardNode(config, width, height, xPosition, yPosition)
     const textRgba = (alpha) => cssColorToRgba(textColor, alpha);
     container.style += ` border: 1px solid ${textRgba(BORDER_ALPHA)};`;
 
-    const scale = Math.min(width / BASE_CONTAINER_WIDTH, height / BASE_CONTAINER_HEIGHT);
-    const titleFontSize = Math.round(BASE_TITLE_FONT_SIZE * scale);
-    const itemFontSize = Math.round(BASE_ITEM_FONT_SIZE * scale);
+    let currentScale = Math.min(width / REF_WIDTH_PX, height / REF_HEIGHT_PX);
 
     const contentBox = new St.BoxLayout({
         orientation: Clutter.Orientation.VERTICAL,
@@ -52,7 +54,7 @@ export function createClipboardNode(config, width, height, xPosition, yPosition)
 
     const headerLabel = new St.Label({
         text: 'Clipboard History',
-        style: `${fontCss}color: ${textColor}; font-size: ${titleFontSize}px; opacity: ${SECONDARY_OPACITY};`,
+        style: `${fontCss}color: ${textColor}; opacity: ${SECONDARY_OPACITY};`,
         y_align: Clutter.ActorAlign.CENTER,
     });
 
@@ -63,7 +65,7 @@ export function createClipboardNode(config, width, height, xPosition, yPosition)
         orientation: Clutter.Orientation.VERTICAL,
         x_expand: true,
         y_expand: true,
-        style: `spacing: ${Math.max(1, Math.round(LIST_SPACING_PX * scale))}px;`,
+        style: `spacing: ${Math.max(1, Math.round(LIST_SPACING_PX * currentScale))}px;`,
     });
 
     const scrollView = new St.ScrollView({
@@ -106,15 +108,15 @@ export function createClipboardNode(config, width, height, xPosition, yPosition)
         if (state.clipboardHistory.length === 0) {
             const emptyLabel = new St.Label({
                 text: 'No history yet.',
-                style: `${fontCss}color: ${textColor}; opacity: ${SECONDARY_OPACITY}; font-size: ${itemFontSize}px;`,
+                style: `${fontCss}color: ${textColor}; opacity: ${SECONDARY_OPACITY}; font-size: ${Math.round(BASE_ITEM_FONT_SIZE * currentScale)}px;`,
             });
             itemContainer.add_child(emptyLabel);
             return;
         }
 
-        const maxLen = Math.max(PREVIEW_TEXT_MIN_LENGTH, Math.round(PREVIEW_TEXT_MAX_LENGTH * scale));
-        const itemRadius = Math.max(1, Math.round(ITEM_RADIUS_PX * scale));
-        const itemPadding = `${Math.max(1, Math.round(ITEM_PADDING_V_PX * scale))}px ${Math.max(1, Math.round(ITEM_PADDING_H_PX * scale))}px`;
+        const maxLen = Math.max(PREVIEW_TEXT_MIN_LENGTH, Math.round(PREVIEW_TEXT_MAX_LENGTH * currentScale));
+        const itemRadius = Math.max(1, Math.round(ITEM_RADIUS_PX * currentScale));
+        const itemPadding = `${Math.max(1, Math.round(ITEM_PADDING_V_PX * currentScale))}px ${Math.max(1, Math.round(ITEM_PADDING_H_PX * currentScale))}px`;
         const itemNormalStyle = `padding: ${itemPadding}; border-radius: ${itemRadius}px;`
             + `background-color: ${textRgba(ITEM_IDLE_ALPHA)};`;
         const itemHoverStyle = `padding: ${itemPadding}; border-radius: ${itemRadius}px;`
@@ -143,7 +145,7 @@ export function createClipboardNode(config, width, height, xPosition, yPosition)
 
             const textLabel = new St.Label({
                 text: truncatedPreview,
-                style: `${fontCss}color: ${textColor}; font-size: ${itemFontSize}px;`,
+                style: `${fontCss}color: ${textColor}; font-size: ${Math.round(BASE_ITEM_FONT_SIZE * currentScale)}px;`,
                 y_align: Clutter.ActorAlign.CENTER,
                 x_expand: true,
             });
@@ -189,6 +191,20 @@ export function createClipboardNode(config, width, height, xPosition, yPosition)
     renderClipboardItems();
     startPollingTimer(pollSystemClipboard, TICK_INTERVAL_MS, state);
     connectTimerCleanup(container, state);
+
+    function applyScale(scale) {
+        currentScale = scale;
+        const titleFontSize = Math.round(BASE_TITLE_FONT_SIZE * scale);
+        headerLabel.set_style(`${fontCss}color: ${textColor}; font-size: ${titleFontSize}px; opacity: ${SECONDARY_OPACITY};`);
+        itemContainer.set_style(`spacing: ${Math.max(1, Math.round(LIST_SPACING_PX * scale))}px;`);
+        renderClipboardItems();
+    }
+
+    applyScale(Math.min(width / REF_WIDTH_PX, height / REF_HEIGHT_PX));
+    attachResponsiveScaler(container, REF_WIDTH_PX, REF_HEIGHT_PX, (_ratio, w, h) => {
+        if (isActorDestroyed(container)) return;
+        applyScale(Math.min(w / REF_WIDTH_PX, h / REF_HEIGHT_PX));
+    });
 
     return container;
 }
