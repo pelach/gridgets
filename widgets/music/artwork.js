@@ -374,6 +374,7 @@ export function clearArtworkCaches() {
         cancellable.cancel();
     }
     activeArtworkDownloads.clear();
+    artworkDownloadQueue.clear();
     dominantColorCache.clear();
     artworkFileCache.clear();
     failedArtworkDownloadAttempts.clear();

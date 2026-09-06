@@ -27,62 +27,47 @@ import {
 } from '../widgets/media/index.js';
 import { isAnimatedImageFile } from '../utils/widgetUtils.js';
 
-export function createWidgetNode(data, width, height, x, y) {
-    const dynamicColor = data.dynamicColor !== undefined ? data.dynamicColor : (data.globalWeatherDynamicColor !== false);
-    const dynamicImage = data.dynamicImage !== undefined ? data.dynamicImage : (data.globalWeatherDynamicImage !== false);
+const WIDGET_CREATORS = {
+    'time': (data, w, h, x, y) => createTimeNode(data, w, h, x, y),
+    'weather': (data, w, h, x, y) => {
+        const dynamicColor = data.dynamicColor !== undefined ? data.dynamicColor : (data.globalWeatherDynamicColor !== false);
+        const dynamicImage = data.dynamicImage !== undefined ? data.dynamicImage : (data.globalWeatherDynamicImage !== false);
+        return createWeatherNode(data, w, h, x, y, dynamicColor, dynamicImage);
+    },
+    'music': (data, w, h, x, y) => createMusicNode(data, w, h, x, y),
+    'notes': (data, w, h, x, y) => createNotesNode(data, w, h, x, y),
+    'clipboard': (data, w, h, x, y) => createClipboardNode(data, w, h, x, y),
+    'cpu-ram': (data, w, h, x, y) => createCpuRamNode(data, w, h, x, y),
+    'network-speed': (data, w, h, x, y) => createNetworkSpeedNode(data, w, h, x, y),
+    'system-dashboard': (data, w, h, x, y) => createSystemDashboardNode(data, w, h, x, y),
+    'pomodoro': (data, w, h, x, y) => createPomodoroNode(data, w, h, x, y),
+    'pomodoro-focus': (data, w, h, x, y) => createPomodoroFocusNode(data, w, h, x, y),
+    'app-launcher': (data, w, h, x, y) => createAppLauncherNode(data, w, h, x, y),
+    'calendar': (data, w, h, x, y) => createCalendarNode(data, w, h, x, y),
+    'quotes': (data, w, h, x, y) => createQuotesNode(data, w, h, x, y),
+    'screen-time': (data, w, h, x, y) => createScreenTimeNode(data, w, h, x, y),
+    'calendar-grid': (data, w, h, x, y) => createCalendarGridNode(data, w, h, x, y),
+    'todo': (data, w, h, x, y) => createTodoNode(data, w, h, x, y),
+    'github': (data, w, h, x, y) => createGithubNode(data, w, h, x, y),
+    'sun-schedule': (data, w, h, x, y) => createSunScheduleNode(data, w, h, x, y),
+    'rss-headlines': (data, w, h, x, y) => createRssHeadlinesNode(data, w, h, x, y),
+    'rss-feed': (data, w, h, x, y) => createRssHeadlinesNode(data, w, h, x, y),
+    'mood': (data, w, h, x, y) => createMoodNode(data, w, h, x, y),
+    'slideshow': (data, w, h, x, y) => createSlideshowNode(data, w, h, x, y),
+    'image': (data, w, h, x, y) => {
+        if (data.imagePath && isAnimatedImageFile(data.imagePath)) {
+            const shouldAnimate = data.animateGif !== undefined ? data.animateGif : (data.globalAnimateGif !== false);
+            return createAnimatedImageNode(data, w, h, x, y, shouldAnimate);
+        }
+        return createStaticImageNode(data, w, h, x, y);
+    },
+};
 
-    switch (data.type) {
-        case 'time':
-            return createTimeNode(data, width, height, x, y);
-        case 'weather':
-            return createWeatherNode(data, width, height, x, y, dynamicColor, dynamicImage);
-        case 'music':
-            return createMusicNode(data, width, height, x, y);
-        case 'notes':
-            return createNotesNode(data, width, height, x, y);
-        case 'clipboard':
-            return createClipboardNode(data, width, height, x, y);
-        case 'cpu-ram':
-            return createCpuRamNode(data, width, height, x, y);
-        case 'network-speed':
-            return createNetworkSpeedNode(data, width, height, x, y);
-        case 'system-dashboard':
-            return createSystemDashboardNode(data, width, height, x, y);
-        case 'pomodoro':
-            return createPomodoroNode(data, width, height, x, y);
-        case 'pomodoro-focus':
-            return createPomodoroFocusNode(data, width, height, x, y);
-        case 'app-launcher':
-            return createAppLauncherNode(data, width, height, x, y);
-        case 'calendar':
-            return createCalendarNode(data, width, height, x, y);
-        case 'quotes':
-            return createQuotesNode(data, width, height, x, y);
-        case 'screen-time':
-            return createScreenTimeNode(data, width, height, x, y);
-        case 'calendar-grid':
-            return createCalendarGridNode(data, width, height, x, y);
-        case 'todo':
-            return createTodoNode(data, width, height, x, y);
-        case 'github':
-            return createGithubNode(data, width, height, x, y);
-        case 'sun-schedule':
-            return createSunScheduleNode(data, width, height, x, y);
-        case 'rss-headlines':
-        case 'rss-feed':
-            return createRssHeadlinesNode(data, width, height, x, y);
-        case 'mood':
-            return createMoodNode(data, width, height, x, y);
-        case 'slideshow':
-            return createSlideshowNode(data, width, height, x, y);
-        case 'image':
-            if (data.imagePath && isAnimatedImageFile(data.imagePath)) {
-                const shouldAnimate = data.animateGif !== undefined ? data.animateGif : (data.globalAnimateGif !== false);
-                return createAnimatedImageNode(data, width, height, x, y, shouldAnimate);
-            }
-            return createStaticImageNode(data, width, height, x, y);
-        default:
-            console.error(`Unknown widget type: ${data.type}`);
-            return null;
+export function createWidgetNode(data, width, height, x, y) {
+    const creator = WIDGET_CREATORS[data.type];
+    if (!creator) {
+        console.error(`Unknown widget type: ${data.type}`);
+        return null;
     }
+    return creator(data, width, height, x, y);
 }

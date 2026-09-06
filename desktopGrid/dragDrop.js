@@ -110,13 +110,21 @@ function endDrag(state, grid, node, widgetData) {
     }
 }
 
-/** The single in-flight drag, if any; lets a new press cancel a drag whose release event was consumed by a grab. */
-let activeDrag = null;
+/** Per-grid in-flight drag, if any; lets a new press cancel a drag whose release event was consumed by a grab. */
+function getActiveDrag(grid) {
+    if (!grid._activeDrag) grid._activeDrag = null;
+    return grid._activeDrag;
+}
 
-function cancelInterruptedDrag() {
+function setActiveDrag(grid, value) {
+    grid._activeDrag = value;
+}
+
+function cancelInterruptedDrag(grid) {
+    const activeDrag = getActiveDrag(grid);
     if (!activeDrag) return;
-    const { state, grid, node, widgetData } = activeDrag;
-    activeDrag = null;
+    const { state, node, widgetData } = activeDrag;
+    setActiveDrag(grid, null);
     endDrag(state, grid, node, widgetData);
 }
 
@@ -126,7 +134,8 @@ export function attachDragHandlers(grid, node, widgetData) {
     const state = { isDragging: false, dragMotionId: 0, dragReleaseId: 0, startX: 0, startY: 0, origGridX: 0, origGridY: 0 };
 
     const finishDrag = () => {
-        if (activeDrag && activeDrag.state === state) activeDrag = null;
+        const currentDrag = getActiveDrag(grid);
+        if (currentDrag && currentDrag.state === state) setActiveDrag(grid, null);
         endDrag(state, grid, node, widgetData);
     };
 
@@ -137,7 +146,7 @@ export function attachDragHandlers(grid, node, widgetData) {
         }
 
         if (event.get_button() === BUTTON_PRIMARY) {
-            cancelInterruptedDrag();
+            cancelInterruptedDrag(grid);
 
             [pressX, pressY] = event.get_coords();
             state.startX = node.x;
@@ -178,13 +187,14 @@ export function attachDragHandlers(grid, node, widgetData) {
                 return Clutter.EVENT_PROPAGATE;
             });
 
-            activeDrag = { state, grid, node, widgetData };
+            setActiveDrag(grid, { state, grid, node, widgetData });
         }
         return Clutter.EVENT_PROPAGATE;
     });
 
     registerWidgetCleanup(node, () => {
-        if (activeDrag && activeDrag.state === state) activeDrag = null;
+        const currentDrag = getActiveDrag(grid);
+        if (currentDrag && currentDrag.state === state) setActiveDrag(grid, null);
         cancelInterruptedDragForState(state);
     });
 }

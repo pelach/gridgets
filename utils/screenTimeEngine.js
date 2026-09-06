@@ -224,4 +224,10 @@ export const screenTimeEngine = {
             apps: Object.fromEntries(this._appHours),
         });
     },
+
+    /** Force-stops tracking regardless of ref count; safety net for disable(). */
+    forceCleanup() {
+        this._refCount = 0;
+        this._stop();
+    },
 };

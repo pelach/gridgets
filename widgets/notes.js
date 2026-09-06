@@ -221,6 +221,12 @@ export function createNotesNode(config, width, height, xPosition, yPosition) {
         editorContainer.add_child(newEditor);
         newEditor.text = currentText;
         newEditor.set_color(editorContainer.get_theme_node().get_foreground_color());
+        newEditor.connect('text-changed', () => {
+            if (isEditingActive) {
+                noteContent = newEditor.text;
+                scheduleDeferredUpdate(state, 500, () => saveJsonToFile(notesFilePath, { notes: noteContent }));
+            }
+        });
         textEditor = newEditor;
         if (wasEditing) {
             global.stage.set_key_focus(textEditor);

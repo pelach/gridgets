@@ -9,6 +9,7 @@ import { createLiveCitySearchRow, buildOpenMeteoCitySearchRow } from './citySear
 import { createAppSelectionControls } from './appSelection.js';
 import { buildCaptionControls } from './captionControls.js';
 import { getConnectedMonitorsCount, buildMonitorEntries } from './displayUtils.js';
+import { DEFAULT_WORLD_CLOCK_CITIES, MIN_SLIDESHOW_INTERVAL_SEC, MAX_SLIDESHOW_INTERVAL_SEC, STEP_SLIDESHOW_INTERVAL_SEC, DEFAULT_SLIDESHOW_INTERVAL_SEC } from './widgetConstants.js';
 
 const MIN_POMODORO_MINUTES = 1;
 const MAX_POMODORO_MINUTES = 120;
@@ -22,17 +23,6 @@ const DEFAULT_SESSIONS_BEFORE_LONG_BREAK = 4;
 const RSS_MIN_REFRESH_MINUTES = 5;
 const RSS_MAX_REFRESH_MINUTES = 720;
 const RSS_REFRESH_STEP_MINUTES = 5;
-
-const DEFAULT_WORLD_CLOCK_CITIES = [
-    { name: 'London', timezone: 'Europe/London', country: 'GB' },
-    { name: 'New York', timezone: 'America/New_York', country: 'US' },
-    { name: 'Moscow', timezone: 'Europe/Moscow', country: 'RU' },
-];
-
-const MIN_SLIDESHOW_INTERVAL_SEC = 5;
-const MAX_SLIDESHOW_INTERVAL_SEC = 3600;
-const STEP_SLIDESHOW_INTERVAL_SEC = 5;
-const DEFAULT_SLIDESHOW_INTERVAL_SEC = 10;
 
 export function buildStandardSettings(grid, rowIdx, widget, settings, saveHandlers) {
     const isImageOrSlideshow = widget.type === 'slideshow' || widget.type === 'image' || widget.imagePath;

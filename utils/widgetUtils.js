@@ -69,7 +69,6 @@ export const DEFAULT_CORNER_RADIUS_PX = 12;
 /** Returns whether a CSS color reads as a dark surface (luminance below 0.5). */
 export function isDarkBackgroundColor(cssColor) {
     const parsed = parseCssColor(cssColor);
-    if (!parsed) return true;
     return (parsed.r * 0.299 + parsed.g * 0.587 + parsed.b * 0.114) < 0.5;
 }
 
@@ -370,7 +369,8 @@ export function deleteCacheFile(subFolder, widgetId) {
     if (!widgetId) return;
     const safeSubFolder = subFolder || '';
     const baseDir = getGridgetsDataDir(safeSubFolder);
-    const filePath = GLib.build_filenamev([baseDir, `${safeSubFolder}-${widgetId}.json`]);
+    const fileName = safeSubFolder ? `${safeSubFolder}-${widgetId}.json` : `${widgetId}.json`;
+    const filePath = GLib.build_filenamev([baseDir, fileName]);
     const file = Gio.File.new_for_path(filePath);
     if (file.query_exists(null)) {
         file.delete_async(GLib.PRIORITY_DEFAULT, null, (f, res) => {
@@ -385,10 +385,8 @@ export function deleteCacheFile(subFolder, widgetId) {
 
 function resolveWidgetConfigValue(config, globalKey, overrideKey, fallbackKeys, defaultValue) {
     const globalValue = config?.[globalKey] ?? defaultValue;
-    if (!config) return globalValue;
-
-    const isColorsOverridden = config.overrideColors ?? config[overrideKey];
-    if (isColorsOverridden === false) return globalValue;
+    const colorOverrideValue = config?.overrideColors ?? config?.[overrideKey];
+    if (colorOverrideValue === false) return globalValue;
 
     for (const key of fallbackKeys) {
         if (config[key] !== undefined && config[key] !== null) return config[key];

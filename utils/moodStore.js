@@ -39,9 +39,9 @@ function requestMonthLoad(monthKey, dateString, onLoaded) {
         }
         if (generation === monthLoadGeneration) {
             monthCache.set(monthKey, data && typeof data === 'object' ? data : {});
-        }
-        for (const callback of callbacks) {
-            callback();
+            for (const callback of callbacks) {
+                callback();
+            }
         }
     });
 }

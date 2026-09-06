@@ -232,7 +232,8 @@ class RssFeedEngine {
     }
 
     _notifySubscribers(items) {
-        for (const callback of this.subscribers.keys()) {
+        const callbacks = [...this.subscribers.keys()];
+        for (const callback of callbacks) {
             callback(items);
         }
     }

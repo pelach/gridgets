@@ -21,11 +21,11 @@ const activeMusicWidgetInstances = new Set();
 
 /** Clears all tracked instances; called from the extension's disable(). */
 export function clearMusicPlaybackState() {
-    activeMusicWidgetInstances.clear();
     if (seekedSignalId) {
-        global.display.disconnect(seekedSignalId);
+        Gio.DBus.session.signal_unsubscribe(seekedSignalId);
         seekedSignalId = 0;
     }
+    activeMusicWidgetInstances.clear();
 }
 
 export const MICROSECONDS_PER_SECOND = 1000000;

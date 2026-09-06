@@ -4,7 +4,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import Soup from 'gi://Soup?version=3.0';
 import Pango from 'gi://Pango';
-import { resolveWidgetBackgroundColor, resolveWidgetForegroundColor, resolveExplicitFontFamily, DEFAULT_BG_COLOR, buildBaseWidgetStyle, celsiusToFahrenheit } from '../../utils/widgetUtils.js';
+import { resolveWidgetBackgroundColor, resolveWidgetForegroundColor, resolveExplicitFontFamily, DEFAULT_BG_COLOR, buildBaseWidgetStyle, celsiusToFahrenheit, parseCssColor } from '../../utils/widgetUtils.js';
 import { isActorDestroyed, watchActorLifecycle } from '../../utils/actorLifecycle.js';
 import { MONTH_NAMES_ABBREVIATED as MONTH_NAMES } from '../../shell/widgetUIUtils.js';
 
@@ -310,11 +310,14 @@ export function updateWidgetStyle(widgetNode, bgImageActor, widgetData, assets, 
 
     if (isDynamicColor) {
         const bgEnd = assets.bgEnd || assets.bgStart;
+        const bgRgb = parseCssColor(assets.bgStart || DEFAULT_BG_COLOR);
+        const luminance = (bgRgb.r * 299 + bgRgb.g * 587 + bgRgb.b * 114) / 1000;
+        const textColor = luminance > 128 ? '#000000' : '#ffffff';
         widgetNode.style = `
             background-gradient-direction: vertical;
             background-gradient-start: ${assets.bgStart};
             background-gradient-end: ${bgEnd};
-            color: white;
+            color: ${textColor};
             ${fontCss}
             ${baseStyle}
         `;

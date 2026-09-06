@@ -11,6 +11,7 @@ import { clearArtworkCaches } from './widgets/music/artwork.js';
 import { clearRssEngines } from './utils/rssEngine.js';
 import { clearEnsuredDirectories } from './utils/widgetUtils.js';
 import { clearMusicPlaybackState } from './widgets/music/playbackState.js';
+import { clearMusicPolls } from './widgets/music/index.js';
 import { screenTimeEngine } from './utils/screenTimeEngine.js';
 
 export default class GridgetsExtension extends Extension {
@@ -83,6 +84,7 @@ export default class GridgetsExtension extends Extension {
         clearArtworkCaches();
         clearRssEngines();
         clearMusicPlaybackState();
+        clearMusicPolls();
         clearEnsuredDirectories();
     }
 

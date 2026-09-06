@@ -266,8 +266,8 @@ export function buildInsightsPage(settings) {
         dialog.set_default_response('cancel');
         dialog.set_close_response('cancel');
         dialog.connect('response', (_dlg, responseId) => {
-            if (responseId === 'clear') clearAllScreenTimeData();
-            refreshAll();
+            if (responseId === 'clear') clearAllScreenTimeData(refreshAll);
+            else refreshAll();
         });
         dialog.present(page.get_root());
     });
@@ -719,7 +719,7 @@ export function buildInsightsPage(settings) {
     return page;
 }
 
-function clearAllScreenTimeData() {
+function clearAllScreenTimeData(callback) {
     const dir = getGridgetsDataDir('screen-time');
     const dirFile = Gio.File.new_for_path(dir);
     dirFile.enumerate_children_async(
@@ -735,12 +735,13 @@ function clearAllScreenTimeData() {
                     const name = info.get_name();
                     if (name.endsWith('.json')) {
                         const file = Gio.File.new_for_path(GLib.build_filenamev([dir, name]));
-                        file.delete_async(GLib.PRIORITY_DEFAULT, null, () => {});
+                        file.delete(null);
                     }
                 }
             } catch (e) {
                 console.error('Error clearing screen time data:', e);
             }
+            if (callback) callback();
         }
     );
 }
