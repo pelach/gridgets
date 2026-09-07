@@ -66,8 +66,7 @@ For a detailed walkthrough of all widgets, customization options, and desktop in
 1. From the project directory:
    ```bash
    gnome-extensions pack \
-     --extra-source=assets/thumbnails \
-     --extra-source=assets/weather \
+     --extra-source=assets \
      --extra-source=desktopGrid \
      --extra-source=shell \
      --extra-source=schemas \
