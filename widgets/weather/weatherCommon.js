@@ -322,7 +322,14 @@ export function updateDailyForecastUi(json, uiElements, extensionPath, useFahren
         actor.maxLabel.text = `${Math.round(maxVal)}°`;
 
         // 4. Hőmérsékleti csík dinamikus pozicionálása és szélessége
-        const barWidth = (actor.barBg && actor.barBg.width > 0) ? actor.barBg.width : 50;
+        let barWidth = actor.barBg ? actor.barBg.width : 0;
+        if (barWidth <= 0 && actor.barBg) {
+            barWidth = actor.barBg.get_allocation_box().get_width();
+        }
+        if (barWidth <= 0) {
+            barWidth = 60;
+        }
+
         let activeLeft = 0;
         let activeWidth = 8;
 

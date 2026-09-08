@@ -20,7 +20,6 @@ const BASE_HOURLY_ICON_SIZE = 14;
 const BASE_DAILY_TEXT_SIZE = 10;
 const BASE_DAILY_ICON_SIZE = 13;
 const BASE_BAR_HEIGHT = 4;
-const BASE_BAR_WIDTH = 55;
 
 const FORECAST_DAYS_COUNT = 5;
 
@@ -79,7 +78,7 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
     const hourlyContainer = new St.BoxLayout({ 
         orientation: Clutter.Orientation.HORIZONTAL, 
         x_expand: true,
-        style: 'margin-top: 4px; margin-bottom: 6px;'
+        style: 'margin-top: 4px; margin-bottom: 8px;'
     });
 
     for (let i = 0; i < HOURLY_FORECAST_COUNT; i++) {
@@ -112,17 +111,18 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
     }
     layout.add_child(hourlyContainer);
 
-    // ── 3. NAPI CSÍKOS ELŐREJELZÉS ──
+    // ── 3. NAPI CSÍKOS ELŐREJELZÉS (Kitölti a maradék magasságot) ──
     const dailyContainer = new St.BoxLayout({
         orientation: Clutter.Orientation.VERTICAL,
         x_expand: true,
-        style: 'spacing: 2px;'
+        y_expand: true,
     });
 
     for (let i = 0; i < FORECAST_DAYS_COUNT; i++) {
         const row = new St.BoxLayout({
             orientation: Clutter.Orientation.HORIZONTAL,
             x_expand: true,
+            y_expand: true,
             y_align: Clutter.ActorAlign.CENTER,
         });
 
@@ -141,19 +141,19 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
 
         const minLabel = new St.Label({
             text: '--°',
-            style: `${fontCss}font-size: ${BASE_DAILY_TEXT_SIZE}px; min-width: 22px; text-align: right; margin-right: 6px; opacity: 0.85;`,
+            style: `${fontCss}font-size: ${BASE_DAILY_TEXT_SIZE}px; min-width: 24px; text-align: right; margin-right: 6px; opacity: 0.85;`,
             y_align: Clutter.ActorAlign.CENTER,
         });
 
+        // Hőmérsékleti sáv konténer: teljesen kifeszül a min és max közé
         const barContainer = new St.BoxLayout({
             x_expand: true,
-            x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
         });
 
         const barBg = new St.Widget({
             style: `background-color: rgba(255, 255, 255, 0.15); height: ${BASE_BAR_HEIGHT}px; border-radius: 2px;`,
-            width: BASE_BAR_WIDTH,
+            x_expand: true,
             height: BASE_BAR_HEIGHT,
             y_align: Clutter.ActorAlign.CENTER,
         });
@@ -171,7 +171,7 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
 
         const maxLabel = new St.Label({
             text: '--°',
-            style: `${fontCss}font-size: ${BASE_DAILY_TEXT_SIZE}px; min-width: 22px; text-align: left; margin-left: 6px; font-weight: 500;`,
+            style: `${fontCss}font-size: ${BASE_DAILY_TEXT_SIZE}px; min-width: 24px; text-align: left; margin-left: 6px; font-weight: 500;`,
             y_align: Clutter.ActorAlign.CENTER,
         });
 
@@ -215,10 +215,9 @@ export function attachForecastScaler(widgetNode, uiElements, widgetData) {
 
         const dailyTextSize = Math.max(1, Math.round(BASE_DAILY_TEXT_SIZE * scale));
         const dailyIconSize = Math.max(1, Math.round(BASE_DAILY_ICON_SIZE * scale));
-        const barH = Math.max(2, Math.round(BASE_BAR_HEIGHT * scale));
-        const barW = Math.max(20, Math.round(BASE_BAR_WIDTH * scale));
-        const dayW = Math.max(20, Math.round(32 * scale));
-        const valW = Math.max(15, Math.round(22 * scale));
+        const barH = Math.max(3, Math.round(BASE_BAR_HEIGHT * scale));
+        const dayW = Math.max(24, Math.round(32 * scale));
+        const valW = Math.max(18, Math.round(24 * scale));
 
         uiElements.cityLabel.style = `${fontCss}font-weight: 600; font-size: ${citySize}px; margin-bottom: 2px; color: inherit;`;
         uiElements.tempLabel.style = `${fontCss}font-size: ${tempSize}px; font-weight: 300; color: inherit;`;
@@ -241,7 +240,6 @@ export function attachForecastScaler(widgetNode, uiElements, widgetData) {
                 actor.minLabel.style = `${fontCss}font-size: ${dailyTextSize}px; min-width: ${valW}px; text-align: right; margin-right: 6px; opacity: 0.85; color: inherit;`;
                 actor.maxLabel.style = `${fontCss}font-size: ${dailyTextSize}px; min-width: ${valW}px; text-align: left; margin-left: 6px; font-weight: 500; color: inherit;`;
 
-                actor.barBg.set_width(barW);
                 actor.barBg.set_height(barH);
                 actor.barBg.style = `background-color: rgba(255, 255, 255, 0.15); height: ${barH}px; border-radius: ${Math.round(barH / 2)}px;`;
                 actor.activeBar.set_height(barH);
