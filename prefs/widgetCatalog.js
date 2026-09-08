@@ -26,7 +26,7 @@ export const STORE_WIDGETS = Object.freeze({
         title: 'Weather Daily Bars',
         description: 'Daily weather forecast with temperature range bars.',
         gridSize: '6x6',
-        thumbnail: 'weathers/weather-forecast.svg',
+        thumbnail: 'weathers/weather-bar.svg',
         fallbackIconName: 'weather-few-clouds-symbolic',
     },
     musicPlayer: {
