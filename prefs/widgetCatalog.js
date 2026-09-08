@@ -25,7 +25,7 @@ export const STORE_WIDGETS = Object.freeze({
     weatherBars: {
         title: 'Weather Daily Bars',
         description: 'Daily weather forecast with temperature range bars.',
-        gridSize: '6x4',
+        gridSize: '6x6',
         thumbnail: 'weathers/weather-forecast.svg',
         fallbackIconName: 'weather-few-clouds-symbolic',
     },
@@ -217,6 +217,9 @@ export const STORE_CATEGORIES = Object.freeze({
 
 function getWeatherEntryKey(widget) {
     const layout = widget.layout || (widget.width >= 6 ? 'forecast' : (widget.width === 4 ? 'simple' : 'standard'));
+    if (layout === 'bars') {
+        return 'weatherBars';
+    }
     if (layout === 'forecast') {
         return 'weatherForecast';
     }

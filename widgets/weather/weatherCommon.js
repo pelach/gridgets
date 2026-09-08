@@ -219,6 +219,8 @@ export function createFallbackIcon(extensionPath) {
 
 // Resolves the effective layout variant with the same rule the widget factory uses.
 export function resolveWeatherLayoutVariant(widgetData) {
+    if (widgetData.type === 'weather_bars')
+        return 'bars';
     return widgetData.layout || (
         widgetData.width >= FORECAST_MIN_GRID_WIDTH
             ? 'forecast'
@@ -320,9 +322,9 @@ export function updateDailyForecastUi(json, uiElements, extensionPath, useFahren
         actor.maxLabel.text = `${Math.round(maxVal)}°`;
 
         // 4. Hőmérsékleti csík dinamikus pozicionálása és szélessége
-        const barWidth = (actor.barBg && actor.barBg.width > 0) ? actor.barBg.width : 80;
+        const barWidth = (actor.barBg && actor.barBg.width > 0) ? actor.barBg.width : 50;
         let activeLeft = 0;
-        let activeWidth = 10;
+        let activeWidth = 8;
 
         if (totalRange > 0 && Number.isFinite(minVal) && Number.isFinite(maxVal)) {
             const leftRatio = Math.max(0, Math.min(1, (minVal - globalMin) / totalRange));
