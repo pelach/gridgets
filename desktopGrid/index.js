@@ -39,6 +39,7 @@ import {
 import { isActorDestroyed, watchActorLifecycle } from '../utils/actorLifecycle.js';
 import { resolveWeatherLayoutVariant } from '../widgets/weather/weatherCommon.js';
 
+
 const GRID_LINE_ALPHA = 0.25;
 const EDIT_OVERLAY_ALPHA = 0.3;
 

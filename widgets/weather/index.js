@@ -11,6 +11,7 @@ import {
 import { buildForecastLayout, attachForecastScaler } from './weatherForecast.js';
 import { buildSimpleLayout, attachSimpleScaler } from './weatherSimple.js';
 import { buildStandardLayout, attachStandardScaler } from './weatherStandard.js';
+import { buildForecastLayout as buildBarsLayout, attachForecastScaler as attachBarsScaler } from './weatherBars.js';
 import { isActorDestroyed } from '../../utils/actorLifecycle.js';
 
 export function createWeatherNode(widgetData, width, height, xPosition, yPosition, isDynamicColor, isDynamicImage) {
@@ -24,7 +25,10 @@ export function createWeatherNode(widgetData, width, height, xPosition, yPositio
     const layoutVariant = resolveWeatherLayoutVariant(widgetData);
 
     let uiElements;
-    if (layoutVariant === 'forecast') {
+    if (widgetData.type === 'weather_bars' || layoutVariant === 'bars') {
+        uiElements = buildBarsLayout(layout, widgetData, extensionPath);
+        attachBarsScaler(widgetNode, uiElements, widgetData);
+    } else if (layoutVariant === 'forecast') {
         uiElements = buildForecastLayout(layout, widgetData, extensionPath);
         attachForecastScaler(widgetNode, uiElements, widgetData);
     } else if (layoutVariant === 'simple') {

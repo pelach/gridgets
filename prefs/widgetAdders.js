@@ -19,7 +19,7 @@ export function addWeatherWidget(settings, city = 'London', width = 3, height = 
     addWidget(settings, { id: nextWidgetId(settings, 'weather'), type: 'weather', location: city, layout }, width, height);
 }
 export function addWeatherBarsWidget(settings, city = 'London', width = 6, height = 4) {
-    addWidget(settings, { id: nextWidgetId(settings, 'weather_bars'), type: 'weather_bars', location: city, layout: 'forecast' }, width, height);
+    addWidget(settings, { id: nextWidgetId(settings, 'weather_bars'), type: 'weather_bars', location: city, layout: 'bars' }, width, height);
 }
 export function addMusicWidget(settings, width = 4, height = 4) {
     const config = { id: nextWidgetId(settings, 'music'), type: 'music' };
