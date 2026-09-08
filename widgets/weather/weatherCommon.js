@@ -279,6 +279,60 @@ export function updateHourlyForecastUi(json, uiElements, currentEpoch, extension
     }
 }
 
+export function updateDailyForecastUi(json, uiElements, extensionPath, useFahrenheit, folderName = '3x3') {
+    if (!uiElements.dailyActors || uiElements.dailyActors.length === 0 || !json.forecast || !json.forecast.forecastday)
+        return;
+
+    const forecastDays = json.forecast.forecastday;
+    // Kihagyjuk a mai napot (ha azt nem akarjuk duplán listázni, vagy benne hagyhatjuk a slice(1)-gyel)
+    const displayDays = forecastDays.length > 1 ? forecastDays.slice(1, 6) : forecastDays.slice(0, 5);
+
+    if (displayDays.length === 0) return;
+
+    // Globális min és max meghatározása a csíkok skálázásához
+    let globalMin = Math.min(...displayDays.map(d => useFahrenheit ? d.day.mintemp_f : d.day.mintemp_c));
+    let globalMax = Math.max(...displayDays.map(d => useFahrenheit ? d.day.maxtemp_f : d.day.maxtemp_c));
+    if (globalMin === globalMax) globalMax += 1;
+    const totalRange = globalMax - globalMin;
+
+    displayDays.forEach((dayData, i) => {
+        if (!uiElements.dailyActors[i]) return;
+        const actor = uiElements.dailyActors[i];
+
+        const minVal = useFahrenheit ? dayData.day.mintemp_f : dayData.day.mintemp_c;
+        const maxVal = useFahrenheit ? dayData.day.maxtemp_f : dayData.day.maxtemp_c;
+
+        // 1. Nap neve
+        let dayName = '--';
+        if (dayData.date) {
+            const dateObj = new Date(dayData.date + 'T00:00:00');
+            dayName = DAY_NAMES[dateObj.getDay()];
+        }
+        actor.dayLabel.text = dayName;
+
+        // 2. Ikon
+        const condCode = resolveConditionCode(dayData.day.condition ? dayData.day.condition.code : null);
+        const assets = getWeatherAssets(extensionPath, condCode, true, folderName, dayData.day.condition ? dayData.day.condition.text : '');
+        actor.icon.gicon = new Gio.FileIcon({ file: Gio.File.new_for_path(assets.iconPath) });
+
+        // 3. Min/Max feliratok
+        actor.minLabel.text = `${Math.round(minVal)}°`;
+        actor.maxLabel.text = `${Math.round(maxVal)}°`;
+
+        // 4. Hőmérsékleti csík dinamikus pozicionálása és szélessége
+        const barWidth = actor.barBg.width || 90;
+        const leftRatio = Math.max(0, (minVal - globalMin) / totalRange);
+        const rightRatio = Math.min(1, (maxVal - globalMin) / totalRange);
+
+        const activeLeft = Math.round(leftRatio * barWidth);
+        const activeRight = Math.round(rightRatio * barWidth);
+        const activeWidth = Math.max(6, activeRight - activeLeft);
+
+        actor.activeBar.set_width(activeWidth);
+        actor.activeBar.set_position(activeLeft, 0);
+    });
+}
+
 export function updateTextLabels(json, uiElements, useFahrenheit) {
     const current = json.current;
     if (!current) return;
@@ -363,6 +417,7 @@ export function updateWeatherUi(json, context) {
     }
 
     updateHourlyForecastUi(json, uiElements, json.current.last_updated_epoch, extensionPath, useFahrenheit, folderName);
+    updateDailyForecastUi(json, uiElements, extensionPath, useFahrenheit, folderName);
 }
 
 function getWmoConditionText(code) {
@@ -454,7 +509,7 @@ async function fetchOpenMeteoWeather({ latitude, longitude, name }, context) {
 
     try {
         const weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude='
-            + `${latitude}&longitude=${longitude}&current_weather=true&forecast_days=2`
+            + `${latitude}&longitude=${longitude}&current_weather=true&forecast_days=6`
             + '&hourly=temperature_2m,weathercode,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto';
         const wJson = await fetchJsonAsync(widgetNode.weatherSession, weatherUrl);
 
@@ -499,24 +554,28 @@ async function fetchOpenMeteoWeather({ latitude, longitude, name }, context) {
             });
         }
 
-        const forecastday = [...dailyGroups.keys()].map((dayKey, dayIndex) => {
-            let dayHigh = wJson.current_weather.temperature;
-            let dayLow = wJson.current_weather.temperature;
-            if (wJson.daily && wJson.daily.temperature_2m_max && wJson.daily.temperature_2m_max[dayIndex] !== undefined) {
-                dayHigh = wJson.daily.temperature_2m_max[dayIndex];
-                dayLow = wJson.daily.temperature_2m_min[dayIndex];
-            }
+        const forecastday = (wJson.daily && wJson.daily.time) ? wJson.daily.time.map((dayKey, dayIndex) => {
+            const dayHigh = wJson.daily.temperature_2m_max[dayIndex] ?? wJson.current_weather.temperature;
+            const dayLow = wJson.daily.temperature_2m_min[dayIndex] ?? wJson.current_weather.temperature;
+            const dailyCode = (wJson.daily.weathercode && wJson.daily.weathercode[dayIndex] !== undefined)
+                ? wJson.daily.weathercode[dayIndex]
+                : currentCode;
 
             return {
+                date: dayKey,
                 day: {
                     maxtemp_c: dayHigh,
                     maxtemp_f: celsiusToFahrenheit(dayHigh),
                     mintemp_c: dayLow,
                     mintemp_f: celsiusToFahrenheit(dayLow),
+                    condition: {
+                        code: wmoToWeatherApiCode(dailyCode),
+                        text: getWmoConditionText(dailyCode),
+                    },
                 },
-                hour: dailyGroups.get(dayKey),
+                hour: dailyGroups.get(dayKey) || [],
             };
-        });
+        }) : [];
 
         const mapped = {
             location: { name },

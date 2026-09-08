@@ -22,6 +22,13 @@ export const STORE_WIDGETS = Object.freeze({
         thumbnail: 'weathers/weather-forecast.svg',
         fallbackIconName: 'weather-overcast-symbolic',
     },
+    weatherBars: {
+        title: 'Weather Daily Bars',
+        description: 'Daily weather forecast with temperature range bars.',
+        gridSize: '6x4',
+        thumbnail: 'weathers/weather-forecast.svg',
+        fallbackIconName: 'weather-few-clouds-symbolic',
+    },
     musicPlayer: {
         title: 'Music Player',
         description: 'Displays the currently playing media album art.',
@@ -186,7 +193,7 @@ export const STORE_WIDGETS = Object.freeze({
 });
 
 export const STORE_CATEGORIES = Object.freeze({
-    weather: ['weatherStandard', 'weatherMinimal', 'weatherForecast', 'sunScheduleWidget'],
+    weather: ['weatherStandard', 'weatherMinimal', 'weatherForecast', 'weatherBars', 'sunScheduleWidget'],
     music: ['musicPlayer', 'musicPlayerWide'],
     time: ['timeAndDate', 'worldClock', 'calendarWidget', 'calendarGrid'],
     media: ['imageGif', 'imageSlideshow'],
@@ -230,6 +237,8 @@ function getStoreWidgetKey(widget) {
     switch (widget.type) {
         case 'weather':
             return getWeatherEntryKey(widget);
+        case 'weather_bars':
+            return 'weatherBars';    
         case 'music':
             return getMusicEntryKey(widget);
         case 'time':
@@ -301,6 +310,8 @@ export function getWidgetDetailText(widget) {
     switch (widget.type) {
         case 'weather':
             return `Location: ${widget.location || 'London'}`;
+        case 'weather_bars':
+            return `Location: ${widget.location || 'London'}`;    
         case 'slideshow':
             return `Folder: ${getPathBaseName(widget.slideshowFolder, 'Unknown')}`;
         case 'image':

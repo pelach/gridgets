@@ -29,6 +29,7 @@ export const MIN_WIDGET_SIZES = Object.freeze({
     'cpu-ram': { minCols: 3, minRows: 2 },
     'time': { minCols: 2, minRows: 2 },
     'weather': { minCols: 2, minRows: 2 },
+    'weather_bars': { minCols: 6, minRows: 4 },
     'music': { minCols: 3, minRows: 2 },
     'notes': { minCols: 3, minRows: 3 },
     'clipboard': { minCols: 3, minRows: 3 },
@@ -441,6 +442,7 @@ const SIZE_PRESETS = {
     'weatherStandard': [[4, 4], [5, 5], [6, 6]],
     'weatherSimple': [[4, 4], [5, 5], [6, 5]],
     'weatherForecast': [[6, 4], [8, 5], [10, 6]],
+    'weatherBars': [[6, 4], [8, 5], [10, 6]],
     'sun-schedule': [[4, 4], [5, 5], [6, 6]],
     'musicSmall': [[4, 4], [5, 5], [6, 6]],
     'musicWide': [[8, 4], [10, 5], [12, 6]],
@@ -473,6 +475,8 @@ function resolveSizePresetTable(widgetData) {
                 return SIZE_PRESETS.weatherForecast;
             return (layout === 'simple') ? SIZE_PRESETS.weatherSimple : SIZE_PRESETS.weatherStandard;
         }
+        case 'weather_bars':
+            return SIZE_PRESETS.weatherBars;
         case 'music':
             return isWideMusicLayout(widgetData) ? SIZE_PRESETS.musicWide : SIZE_PRESETS.musicSmall;
         default:

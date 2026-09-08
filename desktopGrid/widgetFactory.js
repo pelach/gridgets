@@ -1,5 +1,6 @@
 import { createTimeNode } from '../widgets/time/index.js';
 import { createWeatherNode } from '../widgets/weather/index.js';
+import { createWeatherNode as createWeatherBarsNode } from '../widgets/weather_bars/index.js';
 import { createMusicNode } from '../widgets/music/index.js';
 import { createNotesNode } from '../widgets/notes.js';
 import { createClipboardNode } from '../widgets/clipboard.js';
@@ -36,6 +37,8 @@ export function createWidgetNode(data, width, height, x, y) {
             return createTimeNode(data, width, height, x, y);
         case 'weather':
             return createWeatherNode(data, width, height, x, y, dynamicColor, dynamicImage);
+        case 'weather_bars':
+            return createWeatherBarsNode(data, width, height, x, y, dynamicColor, dynamicImage);    
         case 'music':
             return createMusicNode(data, width, height, x, y);
         case 'notes':

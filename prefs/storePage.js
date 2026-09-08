@@ -5,6 +5,7 @@ import Adw from 'gi://Adw';
 import {
     addTimeWidget,
     addWeatherWidget,
+    addWeatherBarsWidget,
     addMusicWidget,
     addPomodoroWidget,
     addPomodoroFocusWidget,
@@ -194,6 +195,7 @@ export function buildStorePage(window, settings, extensionPath) {
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.weather[0]], () => addWeather(3, 3, 'standard')),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.weather[1]], () => addWeather(3, 3, 'simple')),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.weather[2]], () => addWeather(6, 4, 'forecast')),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.weatherBars, () => addWeatherBarsWidget(settings, settings.get_string('weather-city'), 6, 4)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.sunScheduleWidget, () => openAddSunScheduleDialog(window, settings)),
     ]));
 
