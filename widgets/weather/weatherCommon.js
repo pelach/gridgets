@@ -320,16 +320,27 @@ export function updateDailyForecastUi(json, uiElements, extensionPath, useFahren
         actor.maxLabel.text = `${Math.round(maxVal)}°`;
 
         // 4. Hőmérsékleti csík dinamikus pozicionálása és szélessége
-        const barWidth = actor.barBg.width || 90;
-        const leftRatio = Math.max(0, (minVal - globalMin) / totalRange);
-        const rightRatio = Math.min(1, (maxVal - globalMin) / totalRange);
+        const barWidth = (actor.barBg && actor.barBg.width > 0) ? actor.barBg.width : 80;
+        let activeLeft = 0;
+        let activeWidth = 10;
 
-        const activeLeft = Math.round(leftRatio * barWidth);
-        const activeRight = Math.round(rightRatio * barWidth);
-        const activeWidth = Math.max(6, activeRight - activeLeft);
+        if (totalRange > 0 && Number.isFinite(minVal) && Number.isFinite(maxVal)) {
+            const leftRatio = Math.max(0, Math.min(1, (minVal - globalMin) / totalRange));
+            const rightRatio = Math.max(0, Math.min(1, (maxVal - globalMin) / totalRange));
 
-        actor.activeBar.set_width(activeWidth);
-        actor.activeBar.set_position(activeLeft, 0);
+            activeLeft = Math.round(leftRatio * barWidth);
+            const activeRight = Math.round(rightRatio * barWidth);
+            activeWidth = Math.max(6, activeRight - activeLeft);
+
+            if (activeLeft + activeWidth > barWidth) {
+                activeWidth = barWidth - activeLeft;
+            }
+        }
+
+        if (actor.activeBar) {
+            actor.activeBar.set_x(activeLeft);
+            actor.activeBar.set_width(activeWidth);
+        }
     });
 }
 
