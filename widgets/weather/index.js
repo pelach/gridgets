@@ -11,7 +11,7 @@ import {
 import { buildForecastLayout, attachForecastScaler } from './weatherForecast.js';
 import { buildSimpleLayout, attachSimpleScaler } from './weatherSimple.js';
 import { buildStandardLayout, attachStandardScaler } from './weatherStandard.js';
-import { buildForecastLayout as buildBarsLayout, attachForecastScaler as attachBarsScaler } from './weatherBars.js';
+import { buildBarsLayout, attachBarsScaler } from './weatherBars.js';
 import { isActorDestroyed } from '../../utils/actorLifecycle.js';
 
 export function createWeatherNode(widgetData, width, height, xPosition, yPosition, isDynamicColor, isDynamicImage) {

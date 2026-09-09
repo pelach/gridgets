@@ -23,14 +23,14 @@ const BASE_BAR_HEIGHT = 4;
 
 const FORECAST_DAYS_COUNT = 5;
 
-export function buildForecastLayout(layout, widgetData, extensionPath) {
+export function buildBarsLayout(layout, widgetData, extensionPath) {
     const uiElements = { hourlyActors: [], dailyActors: [] };
     const fontCss = buildFontCss(widgetData);
 
-    // ── 1. FELSŐ FEJRÉSZ ──
+    // ── 1. Header ──
     const topLayout = new St.BoxLayout({ orientation: Clutter.Orientation.HORIZONTAL, x_expand: true });
     const leftLayout = new St.BoxLayout({ orientation: Clutter.Orientation.VERTICAL, x_expand: true });
-    
+
     uiElements.cityLabel = new St.Label({
         text: widgetData.location || FALLBACK_LOCATION,
         style: `${fontCss}font-weight: 600; font-size: ${BASE_CITY_FONT_SIZE}px; margin-bottom: 2px;`
@@ -59,7 +59,7 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
         style: `${fontCss}font-size: ${BASE_CONDITION_FONT_SIZE}px; font-weight: 400; text-align: right;`
     });
     configureWrappingLabel(uiElements.conditionLabel, Pango.Alignment.RIGHT);
-    
+
     uiElements.highLowLabel = new St.Label({
         text: 'H:--° L:--°',
         style: `${fontCss}font-size: ${BASE_HIGHLOW_FONT_SIZE}px; opacity: ${SECONDARY_OPACITY}; text-align: right;`,
@@ -74,9 +74,9 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
 
     layout.add_child(topLayout);
 
-    // ── 2. ÓRÁS ELŐREJELZÉS ──
-    const hourlyContainer = new St.BoxLayout({ 
-        orientation: Clutter.Orientation.HORIZONTAL, 
+    // ── 2. Hourly Forecast ──
+    const hourlyContainer = new St.BoxLayout({
+        orientation: Clutter.Orientation.HORIZONTAL,
         x_expand: true,
         style: 'margin-top: 4px; margin-bottom: 8px;'
     });
@@ -111,12 +111,14 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
     }
     layout.add_child(hourlyContainer);
 
-    // ── 3. NAPI CSÍKOS ELŐREJELZÉS (Kitölti a maradék magasságot) ──
+    // ── 3. Daily Forecast with Bars ──
     const dailyContainer = new St.BoxLayout({
         orientation: Clutter.Orientation.VERTICAL,
         x_expand: true,
         y_expand: true,
     });
+
+    const accentColor = widgetData.accentColor || widgetData.globalAccentColor || '#5b8cbd';
 
     for (let i = 0; i < FORECAST_DAYS_COUNT; i++) {
         const row = new St.BoxLayout({
@@ -145,7 +147,6 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
             y_align: Clutter.ActorAlign.CENTER,
         });
 
-        // Hőmérsékleti sáv konténer: teljesen kifeszül a min és max közé
         const barContainer = new St.BoxLayout({
             x_expand: true,
             y_align: Clutter.ActorAlign.CENTER,
@@ -159,7 +160,7 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
         });
 
         const activeBar = new St.Widget({
-            style: `background-gradient-direction: horizontal; background-gradient-start: #8ae06a; background-gradient-end: #ffd043; height: ${BASE_BAR_HEIGHT}px; border-radius: 2px;`,
+            style: `background-gradient-direction: horizontal; background-gradient-start: ${accentColor}; background-gradient-end: #ffd043; height: ${BASE_BAR_HEIGHT}px; border-radius: 2px;`,
             width: 8,
             height: BASE_BAR_HEIGHT,
             x: 0,
@@ -198,7 +199,7 @@ export function buildForecastLayout(layout, widgetData, extensionPath) {
     return uiElements;
 }
 
-export function attachForecastScaler(widgetNode, uiElements, widgetData) {
+export function attachBarsScaler(widgetNode, uiElements, widgetData) {
     const fontCss = buildFontCss(widgetData);
 
     return attachResponsiveScaler(widgetNode, BASE_LAYOUT_WIDTH, BASE_LAYOUT_HEIGHT, (scale) => {
@@ -234,6 +235,7 @@ export function attachForecastScaler(widgetNode, uiElements, widgetData) {
         }
 
         if (uiElements.dailyActors) {
+            const accentColor = widgetData.accentColor || widgetData.globalAccentColor || '#5b8cbd';
             uiElements.dailyActors.forEach(actor => {
                 actor.dayLabel.style = `${fontCss}font-size: ${dailyTextSize}px; font-weight: 600; min-width: ${dayW}px; color: inherit;`;
                 actor.icon.icon_size = dailyIconSize;
@@ -243,7 +245,7 @@ export function attachForecastScaler(widgetNode, uiElements, widgetData) {
                 actor.barBg.set_height(barH);
                 actor.barBg.style = `background-color: rgba(255, 255, 255, 0.15); height: ${barH}px; border-radius: ${Math.round(barH / 2)}px;`;
                 actor.activeBar.set_height(barH);
-                actor.activeBar.style = `background-gradient-direction: horizontal; background-gradient-start: #8ae06a; background-gradient-end: #ffd043; height: ${barH}px; border-radius: ${Math.round(barH / 2)}px;`;
+                actor.activeBar.style = `background-gradient-direction: horizontal; background-gradient-start: ${accentColor}; background-gradient-end: #ffd043; height: ${barH}px; border-radius: ${Math.round(barH / 2)}px;`;
             });
         }
     });

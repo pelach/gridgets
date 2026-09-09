@@ -286,12 +286,12 @@ export function updateDailyForecastUi(json, uiElements, extensionPath, useFahren
         return;
 
     const forecastDays = json.forecast.forecastday;
-    // Kihagyjuk a mai napot (ha azt nem akarjuk duplán listázni, vagy benne hagyhatjuk a slice(1)-gyel)
+    // Skip today to display the upcoming 5 days
     const displayDays = forecastDays.length > 1 ? forecastDays.slice(1, 6) : forecastDays.slice(0, 5);
 
     if (displayDays.length === 0) return;
 
-    // Globális min és max meghatározása a csíkok skálázásához
+    // Global min and max to normalize the bar ranges
     let globalMin = Math.min(...displayDays.map(d => useFahrenheit ? d.day.mintemp_f : d.day.mintemp_c));
     let globalMax = Math.max(...displayDays.map(d => useFahrenheit ? d.day.maxtemp_f : d.day.maxtemp_c));
     if (globalMin === globalMax) globalMax += 1;
@@ -304,7 +304,7 @@ export function updateDailyForecastUi(json, uiElements, extensionPath, useFahren
         const minVal = useFahrenheit ? dayData.day.mintemp_f : dayData.day.mintemp_c;
         const maxVal = useFahrenheit ? dayData.day.maxtemp_f : dayData.day.maxtemp_c;
 
-        // 1. Nap neve
+        // 1. Day of week
         let dayName = '--';
         if (dayData.date) {
             const dateObj = new Date(dayData.date + 'T00:00:00');
@@ -312,16 +312,16 @@ export function updateDailyForecastUi(json, uiElements, extensionPath, useFahren
         }
         actor.dayLabel.text = dayName;
 
-        // 2. Ikon
+        // 2. Condition Icon
         const condCode = resolveConditionCode(dayData.day.condition ? dayData.day.condition.code : null);
         const assets = getWeatherAssets(extensionPath, condCode, true, folderName, dayData.day.condition ? dayData.day.condition.text : '');
         actor.icon.gicon = new Gio.FileIcon({ file: Gio.File.new_for_path(assets.iconPath) });
 
-        // 3. Min/Max feliratok
+        // 3. Min/Max Labels
         actor.minLabel.text = `${Math.round(minVal)}°`;
         actor.maxLabel.text = `${Math.round(maxVal)}°`;
 
-        // 4. Hőmérsékleti csík dinamikus pozicionálása és szélessége
+        // 4. Dynamic bar positioning and width calculation
         let barWidth = actor.barBg ? actor.barBg.width : 0;
         if (barWidth <= 0 && actor.barBg) {
             barWidth = actor.barBg.get_allocation_box().get_width();
@@ -384,11 +384,15 @@ export function updateWidgetStyle(widgetNode, bgImageActor, widgetData, assets, 
 
     if (isDynamicColor) {
         const bgEnd = assets.bgEnd || assets.bgStart;
+        // Check if dynamic background is light (snow / fog / blizzard)
+        const isLightBg = assets.bgStart === '#b8d6eb' || assets.bgStart === '#a1aba3' || assets.bgStart === '#c2a884';
+        const textColor = isLightBg ? '#1a1a1a' : 'white';
+
         widgetNode.style = `
             background-gradient-direction: vertical;
             background-gradient-start: ${assets.bgStart};
             background-gradient-end: ${bgEnd};
-            color: white;
+            color: ${textColor};
             ${fontCss}
             ${baseStyle}
         `;
