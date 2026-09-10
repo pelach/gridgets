@@ -99,6 +99,13 @@ export const STORE_WIDGETS = Object.freeze({
         thumbnail: 'system-utils/system-monitor.svg',
         fallbackIconName: 'resources-symbolic',
     },
+    batteryStatus: {
+        title: 'Battery Status',
+        description: 'Monitor your laptop and connected Bluetooth devices battery levels.',
+        gridSize: '4x3',
+        thumbnail: 'system-utils/system-dashboard.svg', 
+        fallbackIconName: 'battery-level-100-charged-symbolic',
+    },
     networkSpeed: {
         title: 'Network Speed',
         description: 'A live tracker for upload and download speeds.',
@@ -199,6 +206,7 @@ export const STORE_CATEGORIES = Object.freeze({
     media: ['imageGif', 'imageSlideshow'],
     utilities: [
         'systemDashboard',
+        'batteryStatus',
         'pomodoroTimer',
         'pomodoroFocus',
         'systemMonitor',
@@ -252,6 +260,8 @@ function getStoreWidgetKey(widget) {
             return 'imageGif';
         case 'system-dashboard':
             return 'systemDashboard';
+        case 'battery-status': 
+            return 'batteryStatus';    
         case 'pomodoro':
             return 'pomodoroTimer';
         case 'pomodoro-focus':

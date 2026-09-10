@@ -12,6 +12,7 @@ import {
     addCpuRamWidget,
     addNetworkSpeedWidget,
     addSystemDashboardWidget,
+    addBatteryStatusWidget,
     addNotesWidget,
     addClipboardWidget,
     addCalendarWidget,
@@ -210,6 +211,7 @@ export function buildStorePage(window, settings, extensionPath) {
     // ── System Monitor ───────────────────────────────────────
     page.add(createCategoryGroup('System Monitor', [
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.systemDashboard, () => addSystemDashboardWidget(settings, 4, 4)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.batteryStatus, () => addBatteryStatusWidget(settings, 4, 3)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.systemMonitor, () => addCpuRamWidget(settings, 4, 2)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.networkSpeed, () => addNetworkSpeedWidget(settings, 3, 2)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.screenTimeWidget, () => addScreenTimeWidget(settings)),
