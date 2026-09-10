@@ -41,6 +41,7 @@ export const MIN_WIDGET_SIZES = Object.freeze({
     'screen-time': { minCols: 6, minRows: 3 },
     'calendar-grid': { minCols: 4, minRows: 4 },
     'mood': { minCols: 4, minRows: 2 },
+    'battery-status': { minCols: 4, minRows: 4 },
 });
 
 /**
@@ -449,6 +450,7 @@ const SIZE_PRESETS = {
     'calendar': [[4, 4], [5, 5], [5, 6]],
     'calendar-grid': [[5, 4], [6, 5], [8, 7]],
     'system-dashboard': [[4, 4], [5, 5], [6, 6]],
+    'battery-status': [[4, 4], [5, 5], [6, 6]],
     'pomodoro': [[4, 4], [5, 5], [6, 6]],
     'pomodoro-focus': [[8, 4], [10, 5], [12, 6]],
     'cpu-ram': [[4, 2], [6, 3], [8, 4]],

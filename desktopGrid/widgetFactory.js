@@ -8,7 +8,8 @@ import { createQuotesNode } from '../widgets/quotes.js';
 import {
     createCpuRamNode,
     createNetworkSpeedNode,
-    createSystemDashboardNode
+    createSystemDashboardNode,
+    createBatteryStatusNode
 } from '../widgets/system/index.js';
 import { createPomodoroNode } from '../widgets/pomodoro.js';
 import { createPomodoroFocusNode } from '../widgets/pomodoroFocus.js';
@@ -49,6 +50,8 @@ export function createWidgetNode(data, width, height, x, y) {
             return createNetworkSpeedNode(data, width, height, x, y);
         case 'system-dashboard':
             return createSystemDashboardNode(data, width, height, x, y);
+        case 'battery-status':
+            return createBatteryStatusNode(data, width, height, x, y);    
         case 'pomodoro':
             return createPomodoroNode(data, width, height, x, y);
         case 'pomodoro-focus':

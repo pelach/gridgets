@@ -147,3 +147,7 @@ export function addImageWidget(settings, imagePath, caption = 'My Image', showCa
 
     addWidget(settings, widgetConfig, width, height);
 }
+
+export function addBatteryStatusWidget(settings, width = 4, height = 3) {
+    addWidget(settings, { id: nextWidgetId(settings, 'battery-status'), type: 'battery-status' }, width, height);
+}
