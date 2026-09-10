@@ -7,11 +7,24 @@ import {
 
 export const DEFAULT_RSS_REFRESH_MINUTES = 15;
 
-export function addTimeWidget(settings, width = 3, height = 2, layout = 'digital', cities = null) {
+export function addTimeWidget(settings, width = 3, height = 2, layout = 'digital', cities = null, skin = null) {
     const config = { id: nextWidgetId(settings, 'time'), type: 'time', layout };
     if (cities && Array.isArray(cities)) {
         config.cities = cities;
     }
+    if (skin) {
+        config.skin = skin;
+    }
+    addWidget(settings, config, width, height);
+}
+
+export function addAnalogClockWidget(settings, skin = 'basic', width = 3, height = 3) {
+    const config = {
+        id: nextWidgetId(settings, 'time'),
+        type: 'time',
+        layout: 'analog',
+        skin,
+    };
     addWidget(settings, config, width, height);
 }
 

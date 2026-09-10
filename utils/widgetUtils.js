@@ -439,6 +439,7 @@ export function resolveExplicitFontFamily(config) {
 export const SIZE_PRESET_TIERS = ['Small', 'Medium', 'Large'];
 const SIZE_PRESETS = {
     'time': [[4, 3], [5, 4], [6, 5]],
+    'timeAnalog': [[4, 4], [5, 5], [6, 6]],
     'worldClock': [[4, 4], [5, 5], [6, 6]],
     'weatherStandard': [[4, 4], [5, 5], [6, 6]],
     'weatherSimple': [[4, 4], [5, 5], [6, 5]],
@@ -470,6 +471,9 @@ export const FREE_FLOW_SIZE_TYPES = ['image', 'slideshow'];
 function resolveSizePresetTable(widgetData) {
     switch (widgetData.type) {
         case 'time':
+            if (widgetData.layout === 'analog' || widgetData.type === 'analogClock') {
+                return SIZE_PRESETS.timeAnalog;
+            }
             return (widgetData.layout === 'world') ? SIZE_PRESETS.worldClock : SIZE_PRESETS.time;
         case 'weather': {    
             const layout = widgetData.layout || 'standard';

@@ -246,13 +246,48 @@ export function buildWeatherSettings(grid, rowIdx, widget, settings, saveHandler
 }
 
 export function buildTimeSettings(grid, rowIdx, widget, settings, saveHandlers) {
-    const formatLabel = new Gtk.Label({ label: 'Use 24-Hour Format:', xalign: 0, hexpand: true });
-    const formatSwitch = new Gtk.Switch({ valign: Gtk.Align.CENTER, halign: Gtk.Align.END });
-    formatSwitch.set_active(widget.use24h !== undefined ? widget.use24h : settings.get_boolean('time-format-24h'));
+    let skinCombo = null;
+    const skinKeys = ['basic', 'sensa'];
+    const skinLabels = ['Basic (Classic)', 'Sensa (Modern)'];
 
-    grid.attach(formatLabel, 0, rowIdx, 1, 1);
-    grid.attach(formatSwitch, 1, rowIdx, 1, 1);
-    rowIdx++;
+    // Ha analóg óra, megjelenítjük a Skin választót
+    let secondHandSwitch = null;
+    if (widget.layout === 'analog') {
+        const skinRowLabel = new Gtk.Label({ label: 'Clock Skin:', xalign: 0, hexpand: true });
+        skinCombo = new Gtk.DropDown({
+            model: Gtk.StringList.new(skinLabels),
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.END,
+        });
+
+        const currentSkin = widget.skin || 'basic';
+        const currentIdx = skinKeys.indexOf(currentSkin);
+        skinCombo.set_selected(currentIdx >= 0 ? currentIdx : 0);
+
+        grid.attach(skinRowLabel, 0, rowIdx, 1, 1);
+        grid.attach(skinCombo, 1, rowIdx, 1, 1);
+        rowIdx++;
+
+        const secondHandLabel = new Gtk.Label({ label: 'Show Second Hand:', xalign: 0, hexpand: true });
+        secondHandSwitch = new Gtk.Switch({ valign: Gtk.Align.CENTER, halign: Gtk.Align.END });
+        secondHandSwitch.set_active(widget.showSecondHand !== false); // Alapból bekapcsolva
+
+        grid.attach(secondHandLabel, 0, rowIdx, 1, 1);
+        grid.attach(secondHandSwitch, 1, rowIdx, 1, 1);
+        rowIdx++;
+    }
+
+    // 24 órás formátum kapcsoló (főleg digitális és világórához hasznos)
+    let formatSwitch = null;
+    if (widget.layout !== 'analog') {
+        const formatLabel = new Gtk.Label({ label: 'Use 24-Hour Format:', xalign: 0, hexpand: true });
+        formatSwitch = new Gtk.Switch({ valign: Gtk.Align.CENTER, halign: Gtk.Align.END });
+        formatSwitch.set_active(widget.use24h !== undefined ? widget.use24h : settings.get_boolean('time-format-24h'));
+
+        grid.attach(formatLabel, 0, rowIdx, 1, 1);
+        grid.attach(formatSwitch, 1, rowIdx, 1, 1);
+        rowIdx++;
+    }
 
     let primaryPicker, sec1Picker, sec2Picker;
     if (widget.layout === 'world' || widget.cities) {
@@ -263,7 +298,15 @@ export function buildTimeSettings(grid, rowIdx, widget, settings, saveHandlers) 
     }
 
     saveHandlers.push((target) => {
-        target.use24h = formatSwitch.get_active();
+        if (skinCombo) {
+            target.skin = skinKeys[skinCombo.get_selected()] || 'basic';
+        }
+        if (secondHandSwitch) {
+            target.showSecondHand = secondHandSwitch.get_active();
+        }
+        if (formatSwitch) {
+            target.use24h = formatSwitch.get_active();
+        }
         if (primaryPicker && sec1Picker && sec2Picker) {
             target.cities = [
                 primaryPicker.getSelectedCity(),

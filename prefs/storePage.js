@@ -4,6 +4,7 @@ import Adw from 'gi://Adw';
 
 import {
     addTimeWidget,
+    addAnalogClockWidget,
     addWeatherWidget,
     addWeatherBarsWidget,
     addMusicWidget,
@@ -230,9 +231,10 @@ export function buildStorePage(window, settings, extensionPath) {
     // ── Time & Calendar ──────────────────────────────────────
     page.add(createCategoryGroup('Time & Calendar', [
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.time[0]], () => addTimeWidget(settings, 3, 2, 'digital')),
-        createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.time[1]], () => openAddWorldClockDialog(window, settings)),
-        createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.time[2]], () => addCalendarWidget(settings)),
-        createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.time[3]], () => addCalendarGridWidget(settings)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.analogClock, () => addAnalogClockWidget(settings, 'basic', 3, 3)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.worldClock, () => openAddWorldClockDialog(window, settings)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.calendarWidget, () => addCalendarWidget(settings)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.calendarGrid, () => addCalendarGridWidget(settings)),
     ]));
 
     // ── Personal ─────────────────────────────────────────────

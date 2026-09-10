@@ -50,6 +50,13 @@ export const STORE_WIDGETS = Object.freeze({
         thumbnail: 'date-and-time/date-and-time.svg',
         fallbackIconName: 'preferences-system-time-symbolic',
     },
+    analogClock: {
+        title: 'Analog Clock',
+        description: 'A skinnable vector analog clock with smooth second hand.',
+        gridSize: '3x3',
+        thumbnail: 'date-and-time/analog-clock.svg',
+        fallbackIconName: 'preferences-system-time-symbolic',
+    },
     worldClock: {
         title: 'World Clock',
         description: 'Multi-city world clock displaying time across global timezones.',
@@ -202,7 +209,7 @@ export const STORE_WIDGETS = Object.freeze({
 export const STORE_CATEGORIES = Object.freeze({
     weather: ['weatherStandard', 'weatherMinimal', 'weatherForecast', 'weatherBars', 'sunScheduleWidget'],
     music: ['musicPlayer', 'musicPlayerWide'],
-    time: ['timeAndDate', 'worldClock', 'calendarWidget', 'calendarGrid'],
+    time: ['timeAndDate', 'analogClock', 'worldClock', 'calendarWidget', 'calendarGrid'],
     media: ['imageGif', 'imageSlideshow'],
     utilities: [
         'systemDashboard',
@@ -253,6 +260,9 @@ function getStoreWidgetKey(widget) {
         case 'music':
             return getMusicEntryKey(widget);
         case 'time':
+            if (widget.layout === 'analog' || widget.type === 'analogClock') {
+                return 'analogClock';
+            }
             return widget.layout === 'world' ? 'worldClock' : 'timeAndDate';
         case 'slideshow':
             return 'imageSlideshow';
@@ -346,6 +356,11 @@ export function getWidgetDetailText(widget) {
             const suffix = remainingCount > 0 ? ` +${remainingCount} more` : '';
             return `Apps: ${previewNames.join(', ')}${suffix}`;
         }
+        case 'time':
+            if (widget.layout === 'analog') {
+                return `Skin: ${widget.skin || 'basic'}`;
+            }
+            return '';
         default:
             return '';
     }
