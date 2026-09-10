@@ -230,7 +230,7 @@ export function resolveWeatherLayoutVariant(widgetData) {
 
 export function getAssetSizeForWidget(widgetData) {
     const layoutVariant = resolveWeatherLayoutVariant(widgetData);
-    return (layoutVariant === 'forecast' || layoutVariant === 'simple') ? '4x6' : '3x3';
+    return (layoutVariant === 'forecast' || layoutVariant === 'simple' || layoutVariant === 'bars' || widgetData.type === 'weather_bars') ? '4x6' : '3x3';
 }
 
 export function updateHourlyForecastUi(json, uiElements, currentEpoch, extensionPath, useFahrenheit, folderName = '3x3') {
@@ -411,10 +411,14 @@ export function updateWidgetStyle(widgetNode, bgImageActor, widgetData, assets, 
         const borderRadius = widgetData.appliedBorderRadius ??
             widgetData.borderRadius ??
             DEFAULT_WEATHER_BORDER_RADIUS_PX;
+        
+        const isSquareLayout = widgetData.type === 'weather_bars' || resolveWeatherLayoutVariant(widgetData) === 'bars';
+        const bgPosition = isSquareLayout ? 'top center' : 'center';
+
         bgImageActor.style = `
             background-image: url("${assets.bgImagePath}");
             background-size: cover;
-            background-position: center;
+            background-position: ${bgPosition};
             border-radius: ${borderRadius}px;
         `;
         bgImageActor.show();
