@@ -102,7 +102,7 @@ export const STORE_WIDGETS = Object.freeze({
     batteryStatus: {
         title: 'Battery Status',
         description: 'Monitor your laptop and connected Bluetooth devices battery levels.',
-        gridSize: '4x3',
+        gridSize: '4x4',
         thumbnail: 'system-utils/battery-status.svg', 
         fallbackIconName: 'battery-level-100-charged-symbolic',
     },
