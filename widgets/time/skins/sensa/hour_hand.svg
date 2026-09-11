@@ -1,10 +1,52 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1000" height="1000" fill="none" opacity="0" />
-  <g transform="scale(3.779527) translate(-2.576534,-0.738134)">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1000 1000"
+   width="1000"
+   height="1000"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="hour_hand.svg"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.291"
+     inkscape:cx="5.1546392"
+     inkscape:cy="718.21306"
+     inkscape:window-width="1341"
+     inkscape:window-height="1269"
+     inkscape:window-x="26"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <rect
+     width="1000"
+     height="1000"
+     fill="none"
+     opacity="0"
+     id="rect1" />
+  <g
+     transform="matrix(3.779527,0,0,3.779527,-25.385831,-2.7897974)"
+     id="g1"
+     inkscape:export-filename="g1.svg"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96">
     <path
-      d="m 135.9998,135.17326 c -0.37372,-0.58011 -0.60033,-1.34762 -0.61897,-2.06547 l -0.24994,-61.16508 c -0.0123,-2.09108 1.64634,-3.79843 3.75753,-3.69837 2.06967,0.0356 3.79785,1.75126 3.74728,3.88282 l 0.25012,61.16513 c 0.0123,2.0906 -1.6459,3.79767 -3.75765,3.69844 -1.29557,-0.0772 -2.4638,-0.78592 -3.12837,-1.81747 z"
-      fill="#3c2200"
-      style="stroke-width:13.2573" />
+       d="m 135.9998,135.17326 c -0.37372,-0.58011 -0.60033,-1.34762 -0.61897,-2.06547 l -0.24994,-61.16508 c -0.0123,-2.09108 1.64634,-3.79843 3.75753,-3.69837 2.06967,0.0356 3.79785,1.75126 3.74728,3.88282 l 0.25012,61.16513 c 0.0123,2.0906 -1.6459,3.79767 -3.75765,3.69844 -1.29557,-0.0772 -2.4638,-0.78592 -3.12837,-1.81747 z"
+       fill="#3c2200"
+       style="stroke-width:13.2573"
+       id="path1" />
   </g>
 </svg>
