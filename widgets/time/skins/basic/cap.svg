@@ -2,7 +2,7 @@
 <svg viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <g transform="scale(3.779527) translate(-0.423284,1.563826)">
     <g transform="matrix(0.50893381,0,0,0.50893381,3.4457575,1.4586509)">
-      <polygon style="fill:#ff7058;" points="257.9,275 254,120 250.1,275" />
+      <circle style="fill:#ffd05b;" cx="254" cy="254" r="15.9" />
     </g>
   </g>
 </svg>

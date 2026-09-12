@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="paint10_linear" x1="12.8367" y1="13.3186" x2="11.4163" y2="11.0801" gradientUnits="userSpaceOnUse" gradientTransform="matrix(13.425504,0,0,13.091193,-26.236504,-24.063189)">
+      <stop stop-color="#FF9214" />
+      <stop offset="1" stop-color="#FF9D00" />
+    </linearGradient>
+  </defs>
+  <g transform="scale(3.779527) translate(-2.576534,-0.738134)">
+    <circle
+      cx="134.8682"
+      cy="133.0298"
+      r="10.89"
+      fill="url(#paint10_linear)"
+      style="stroke-width:13.2573" />
+  </g>
+</svg>

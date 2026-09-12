@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1000" height="1000" fill="none" opacity="0" />
   <defs>
     <linearGradient id="paint8_linear" x1="13.5305" y1="17.6598" x2="10.4694" y2="12.8359" gradientUnits="userSpaceOnUse" gradientTransform="matrix(13.425504,0,0,13.091193,-26.236504,-24.063189)">
-      <stop stop-color="#FF9214" />
-      <stop offset="1" stop-color="#FF9D00" />
-    </linearGradient>
-    <linearGradient id="paint10_linear" x1="12.8367" y1="13.3186" x2="11.4163" y2="11.0801" gradientUnits="userSpaceOnUse" gradientTransform="matrix(13.425504,0,0,13.091193,-26.236504,-24.063189)">
       <stop stop-color="#FF9214" />
       <stop offset="1" stop-color="#FF9D00" />
     </linearGradient>
@@ -15,12 +10,6 @@
     <path
       d="m 134.8682,214.53175 c -0.84312,0 -1.53453,-0.6742 -1.53453,-1.49632 v -85.0561 c 0,-0.82213 0.69141,-1.49633 1.53453,-1.49633 0.84447,0 1.53454,0.6742 1.53454,1.49633 v 85.0561 c 0,0.82212 -0.69007,1.49632 -1.53454,1.49632 z"
       fill="url(#paint8_linear)"
-      style="stroke-width:13.2573" />
-    <circle
-      cx="134.8682"
-      cy="133.0298"
-      r="10.89"
-      fill="url(#paint10_linear)"
       style="stroke-width:13.2573" />
   </g>
 </svg>
