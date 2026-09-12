@@ -1,6 +1,8 @@
 import Gtk from 'gi://Gtk';
 import Gdk from 'gi://Gdk';
 import Pango from 'gi://Pango';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import { isWideMusicLayout, DEFAULT_FONT_FAMILY, DEFAULT_BG_COLOR, DEFAULT_FG_COLOR } from '../utils/widgetUtils.js';
 import { openImageFileDialog } from './fileDialogs.js';
 import { createNormalizedFontDescription } from './aestheticControls.js';
@@ -245,14 +247,56 @@ export function buildWeatherSettings(grid, rowIdx, widget, settings, saveHandler
     return rowIdx;
 }
 
+function getAvailableSkins() {
+    const skins = [];
+    try {
+        const currentFilePath = Gio.File.new_for_uri(import.meta.url).get_path();
+        const currentDir = GLib.path_get_dirname(currentFilePath);
+
+        let skinsPath = GLib.build_filenamev([currentDir, '..', 'widgets', 'time', 'skins']);
+        let targetDir = Gio.File.new_for_path(skinsPath);
+
+        if (!targetDir.query_exists(null)) {
+            skinsPath = GLib.build_filenamev([currentDir, 'widgets', 'time', 'skins']);
+            targetDir = Gio.File.new_for_path(skinsPath);
+        }
+
+        if (targetDir.query_exists(null)) {
+            const enumerator = targetDir.enumerate_children(
+                'standard::name,standard::type',
+                Gio.FileQueryInfoFlags.NONE,
+                null
+            );
+
+            let fileInfo;
+            while ((fileInfo = enumerator.next_file(null)) !== null) {
+                if (fileInfo.get_file_type() === Gio.FileType.DIRECTORY) {
+                    skins.push(fileInfo.get_name());
+                }
+            }
+        }
+    } catch (e) {
+        logError(e, 'Failed to list skins directory');
+    }
+
+    if (skins.length === 0) {
+        skins.push('basic', 'sensa');
+    }
+
+    skins.sort();
+    return skins;
+}
+
 export function buildTimeSettings(grid, rowIdx, widget, settings, saveHandlers) {
     let skinCombo = null;
-    const skinKeys = ['basic', 'sensa'];
-    const skinLabels = ['Basic (Classic)', 'Sensa (Modern)'];
-
-    // Ha analóg óra, megjelenítjük a Skin választót
+    let skinKeys = [];
     let secondHandSwitch = null;
+    let bgSwitch = null;
+
     if (widget.layout === 'analog') {
+        skinKeys = getAvailableSkins();
+        const skinLabels = skinKeys.map(k => k.charAt(0).toUpperCase() + k.slice(1));
+
         const skinRowLabel = new Gtk.Label({ label: 'Clock Skin:', xalign: 0, hexpand: true });
         skinCombo = new Gtk.DropDown({
             model: Gtk.StringList.new(skinLabels),
@@ -268,16 +312,25 @@ export function buildTimeSettings(grid, rowIdx, widget, settings, saveHandlers) 
         grid.attach(skinCombo, 1, rowIdx, 1, 1);
         rowIdx++;
 
+        // Másodpercmutató kapcsoló
         const secondHandLabel = new Gtk.Label({ label: 'Show Second Hand:', xalign: 0, hexpand: true });
         secondHandSwitch = new Gtk.Switch({ valign: Gtk.Align.CENTER, halign: Gtk.Align.END });
-        secondHandSwitch.set_active(widget.showSecondHand !== false); // Alapból bekapcsolva
+        secondHandSwitch.set_active(widget.showSecondHand !== false);
 
         grid.attach(secondHandLabel, 0, rowIdx, 1, 1);
         grid.attach(secondHandSwitch, 1, rowIdx, 1, 1);
         rowIdx++;
+
+        // Háttér doboz ki/be kapcsoló
+        const bgLabel = new Gtk.Label({ label: 'Show Background Box:', xalign: 0, hexpand: true });
+        bgSwitch = new Gtk.Switch({ valign: Gtk.Align.CENTER, halign: Gtk.Align.END });
+        bgSwitch.set_active(widget.showBackground !== false); // Alapértelmezetten bekapcsolva
+
+        grid.attach(bgLabel, 0, rowIdx, 1, 1);
+        grid.attach(bgSwitch, 1, rowIdx, 1, 1);
+        rowIdx++;
     }
 
-    // 24 órás formátum kapcsoló (főleg digitális és világórához hasznos)
     let formatSwitch = null;
     if (widget.layout !== 'analog') {
         const formatLabel = new Gtk.Label({ label: 'Use 24-Hour Format:', xalign: 0, hexpand: true });
@@ -298,11 +351,14 @@ export function buildTimeSettings(grid, rowIdx, widget, settings, saveHandlers) 
     }
 
     saveHandlers.push((target) => {
-        if (skinCombo) {
+        if (skinCombo && skinKeys.length > 0) {
             target.skin = skinKeys[skinCombo.get_selected()] || 'basic';
         }
         if (secondHandSwitch) {
             target.showSecondHand = secondHandSwitch.get_active();
+        }
+        if (bgSwitch) {
+            target.showBackground = bgSwitch.get_active();
         }
         if (formatSwitch) {
             target.use24h = formatSwitch.get_active();

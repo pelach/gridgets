@@ -52,9 +52,16 @@ export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosi
     const textColor = resolveWidgetForegroundColor(widgetData);
     const skinName = widgetData?.skin || DEFAULT_SKIN;
     const showSecondHand = widgetData.showSecondHand !== false;
+    const showBackground = widgetData.showBackground !== false;
 
     const widgetNode = createWidgetContainer(widgetData, width, height, xPosition, yPosition);
-    widgetNode.style += ` border: 1px solid ${cssColorToRgba(textColor, BORDER_ALPHA)};`;
+
+    if (!showBackground) {
+        // Átlátszóvá tesszük a Gridgets dobozt és levesszük a keretet/árnyékot
+        widgetNode.style += ' background-color: transparent; border: none; box-shadow: none;';
+    } else {
+        widgetNode.style += ` border: 1px solid ${cssColorToRgba(textColor, BORDER_ALPHA)};`;
+    }
 
     const centerBin = new St.Bin({
         x_align: Clutter.ActorAlign.CENTER,
