@@ -1,5 +1,50 @@
 # Gridgets — GNOME Shell Widgets
 
+## Fork Highlights & New Features
+
+This fork extends the upstream Gridgets extension with new widgets and modular desktop customizability:
+
+* **Modular Analog Clock with Drop-in SVG Skins:**
+  * Drop any custom SVG skin into `widgets/time/skins/<skin-name>/` — the preferences UI discovers them dynamically.
+  * Seamless center axis coverage via a separate `cap.svg` layer (keeps pin coverage intact even with second hands toggled off).
+  * Optional floating / transparent mode: toggle off the dark container box for seamless wallpaper integration.
+  * Battery/CPU-friendly: switches to a minute-aligned interval when the second hand is disabled.
+* **Battery Status Widget:** Real-time battery percentage, charge status, and power diagnostics on your desktop grid.
+* **Enhanced Weather Integration:** Open-Meteo backend support with flexible styling.
+
+---
+
+### Installing this Fork
+
+Clone directly into your local GNOME Shell extensions directory:
+
+git clone https://github.com/pelach/gridgets.git ~/.local/share/gnome-shell/extensions/gridgets@rebatnaath.github.com
+
+Restart GNOME Shell:
+* **X11:** Press Alt + F2, type r, and hit Enter.
+* **Wayland:** Log out and log back in.
+
+Enable the extension via CLI or the GNOME Extensions app:
+
+gnome-extensions enable gridgets@rebatnaath.github.com
+
+---
+
+### Adding Custom Analog Clock Skins
+
+Creating a new skin takes just a couple of SVGs placed in a dedicated folder:
+
+1. Create a folder: `widgets/time/skins/my-custom-skin/`
+2. Add your assets (standard 1000x1000 canvas with cx="500" cy="500" center):
+   * `background.svg` — Clock face dial and hour markers.
+   * `hour_hand.svg` — Hour pointer.
+   * `minute_hand.svg` — Minute pointer.
+   * `second_hand.svg` — Second pointer (optional).
+   * `cap.svg` — Center pin cover (renders on top of all hands).
+3. Open Gridgets settings: your skin appears automatically in the Clock Skin selector formatted as My-custom-skin.
+
+---
+
 ![Gridgets Showcase](github/showcase.png)
 
 | | | |
