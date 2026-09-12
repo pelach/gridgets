@@ -15,13 +15,12 @@ function getSkinFileUri(skinName, fileName) {
     const filePath = `${currentDir}/skins/${skinName}/${fileName}`;
     const file = Gio.File.new_for_path(filePath);
     
-    // Lekérjük a fájl utolsó módosítási idejét:
     let mtime = Date.now();
     try {
         const info = file.query_info('time::modified', Gio.FileQueryInfoFlags.NONE, null);
         mtime = info.get_attribute_uint64('time::modified');
     } catch (e) {
-        // Ha nem tudta lekérni, marad a pillanatnyi idő
+
     }
 
     return `file://${filePath}?v=${mtime}`;
