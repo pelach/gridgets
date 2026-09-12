@@ -97,6 +97,13 @@ export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosi
             clockContainer.add_child(secondHand);
         }
 
+        const capFileUri = getSkinFileUri(skinName, 'cap.svg');
+        const capFile = Gio.File.new_for_uri(capFileUri);
+        if (capFile.query_exists(null)) {
+            const capIcon = createHandIcon(skinName, 'cap.svg', size);
+            clockContainer.add_child(capIcon);
+        }
+        
         hands = {
             hour: hourHand,
             minute: minuteHand,
