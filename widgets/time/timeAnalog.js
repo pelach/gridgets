@@ -24,6 +24,19 @@ function getSkinFileUri(skinName, fileName) {
     return `file://${filePath}?v=${mtime}`;
 }
 
+function skinFilesExist(skinName, fileNames) {
+    const currentDir = GLib.path_get_dirname(import.meta.url.replace('file://', ''));
+    for (const fileName of fileNames) {
+        const filePath = `${currentDir}/skins/${skinName}/${fileName}`;
+        const file = Gio.File.new_for_path(filePath);
+        if (!file.query_exists(null)) {
+            log(`[Gridgets Clock] Hiányzó kötelező skin fájl: ${filePath}`);
+            return false;
+        }
+    }
+    return true;
+}
+
 function loadSkinConfig(skinName) {
     try {
         const currentDir = GLib.path_get_dirname(import.meta.url.replace('file://', ''));
@@ -79,8 +92,22 @@ function updateHands(hands, showSecondHand, dateLabel = null) {
 }
 
 export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosition) {
-    const textColor = resolveWidgetForegroundColor(widgetData);
     const skinName = widgetData?.skin || DEFAULT_SKIN;
+
+    // Kötelező fájlok listája
+    const requiredFiles = [
+        'background.svg',
+        'hour_hand.svg',
+        'minute_hand.svg',
+        'second_hand.svg'
+    ];
+
+    // Ha bármelyik hiányzik, azonnal kilépünk (nem indul el timer, nem szemetelünk a DOM-ban)
+    if (!skinFilesExist(skinName, requiredFiles)) {
+        return null; // vagy egy üres St.Widget / hibaüzenet, attól függően, a Gridgets mit vár vissza
+    }
+
+    const textColor = resolveWidgetForegroundColor(widgetData);
     const showSecondHand = widgetData.showSecondHand !== false;
     const showBackground = widgetData.showBackground !== false;
     const showDate = widgetData.showDate !== false;
