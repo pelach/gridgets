@@ -19,11 +19,26 @@ function getSkinFileUri(skinName, fileName) {
     try {
         const info = file.query_info('time::modified', Gio.FileQueryInfoFlags.NONE, null);
         mtime = info.get_attribute_uint64('time::modified');
-    } catch (e) {
-
-    }
+    } catch (e) {}
 
     return `file://${filePath}?v=${mtime}`;
+}
+
+function loadSkinConfig(skinName) {
+    try {
+        const currentDir = GLib.path_get_dirname(import.meta.url.replace('file://', ''));
+        const configPath = `${currentDir}/skins/${skinName}/skin.json`;
+        const configFile = Gio.File.new_for_path(configPath);
+        if (configFile.query_exists(null)) {
+            const [ok, contents] = configFile.load_contents(null);
+            if (ok) {
+                return JSON.parse(new TextDecoder().decode(contents));
+            }
+        }
+    } catch (e) {
+        log(`[Gridgets Clock] Error loading skin config for ${skinName}: ${e}`);
+    }
+    return null;
 }
 
 function createHandIcon(skinName, fileName, size) {
@@ -41,7 +56,7 @@ function createHandIcon(skinName, fileName, size) {
     return icon;
 }
 
-function updateHands(hands, showSecondHand) {
+function updateHands(hands, showSecondHand, dateLabel = null) {
     const now = GLib.DateTime.new_now_local();
     const sec = showSecondHand ? now.get_second() : 0;
     const min = now.get_minute();
@@ -57,6 +72,10 @@ function updateHands(hands, showSecondHand) {
         const secAngle = sec * 6;
         hands.second.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, secAngle);
     }
+
+    if (dateLabel) {
+        dateLabel.set_text(now.get_day_of_month().toString());
+    }
 }
 
 export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosition) {
@@ -64,11 +83,13 @@ export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosi
     const skinName = widgetData?.skin || DEFAULT_SKIN;
     const showSecondHand = widgetData.showSecondHand !== false;
     const showBackground = widgetData.showBackground !== false;
+    const showDate = widgetData.showDate !== false;
+
+    const skinConfig = loadSkinConfig(skinName);
 
     const widgetNode = createWidgetContainer(widgetData, width, height, xPosition, yPosition);
 
     if (!showBackground) {
-        // Átlátszóvá tesszük a Gridgets dobozt és levesszük a keretet/árnyékot
         widgetNode.style += ' background-color: transparent; border: none; box-shadow: none;';
     } else {
         widgetNode.style += ` border: 1px solid ${cssColorToRgba(textColor, BORDER_ALPHA)};`;
@@ -89,16 +110,53 @@ export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosi
     centerBin.set_child(clockContainer);
 
     let hands = null;
+    let dateLabel = null;
 
     const buildClockElements = (size) => {
         clockContainer.destroy_all_children();
         clockContainer.set_size(size, size);
 
+        // 1. Dátum réteg (ha a skin támogatja és be van kapcsolva)
+        dateLabel = null;
+        if (showDate && skinConfig?.dateWindow) {
+            const dw = skinConfig.dateWindow;
+            const w = Math.round(size * (dw.width || 0.12));
+            const h = Math.round(size * (dw.height || 0.08));
+            const x = Math.round(size * dw.x - w / 2);
+            const y = Math.round(size * dw.y - h / 2);
+            const fontPx = Math.max(8, Math.round(size * (dw.fontSize || 0.06)));
+
+            const dateBox = new St.Bin({
+                width: w,
+                height: h,
+                x: x,
+                y: y,
+                x_align: Clutter.ActorAlign.CENTER,
+                y_align: Clutter.ActorAlign.CENTER,
+                style: `background-color: ${dw.bgColor || 'transparent'}; border-radius: 2px;`,
+            });
+
+            const fontFamily = dw.fontFamily ? `font-family: "${dw.fontFamily}";` : '';
+
+            dateLabel = new St.Label({
+                text: '',
+                x_align: Clutter.ActorAlign.CENTER,
+                y_align: Clutter.ActorAlign.CENTER,
+                style: `color: ${dw.color || textColor}; font-size: ${fontPx}px; font-weight: bold; ${fontFamily}`,
+            });
+
+            dateBox.set_child(dateLabel);
+            clockContainer.add_child(dateBox);
+        }
+
+        // 2. Óralap (Background) – A kivágáson átlátszik a mögötte lévő dátum
         const background = createHandIcon(skinName, 'background.svg', size);
+        clockContainer.add_child(background);
+
+        // 3. Mutatók (a dátum és a számlap felett mozognak)
         const hourHand = createHandIcon(skinName, 'hour_hand.svg', size);
         const minuteHand = createHandIcon(skinName, 'minute_hand.svg', size);
 
-        clockContainer.add_child(background);
         clockContainer.add_child(hourHand);
         clockContainer.add_child(minuteHand);
 
@@ -121,7 +179,7 @@ export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosi
             second: secondHand,
         };
 
-        updateHands(hands, showSecondHand);
+        updateHands(hands, showSecondHand, dateLabel);
     };
 
     const applyScale = (scale) => {
@@ -136,14 +194,12 @@ export function createAnalogTimeNode(widgetData, width, height, xPosition, yPosi
 
     const updateDisplay = () => {
         if (isActorDestroyed(widgetNode)) return GLib.SOURCE_REMOVE;
-        if (hands) updateHands(hands, showSecondHand);
+        if (hands) updateHands(hands, showSecondHand, dateLabel);
         return GLib.SOURCE_CONTINUE;
     };
 
     applyScale(Math.min(width / BASE_CLOCK_SIZE, height / BASE_CLOCK_SIZE));
 
-    // Ha kell másodpercmutató: 1 másodperces ciklus.
-    // Ha nem kell: perchez igazított kímélő időzítő!
     if (showSecondHand) {
         state.timerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, updateDisplay);
     } else {

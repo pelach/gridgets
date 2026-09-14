@@ -1,0 +1,12 @@
+{
+  "dateWindow": {
+    "x": 0.84,
+    "y": 0.50,
+    "width": 0.12,
+    "height": 0.08,
+    "fontSize": 0.055,
+    "color": "#111111",
+    "bgColor": "#ffffff",
+    "fontFamily": "Cantarell"
+  }
+}

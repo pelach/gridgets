@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1000mm"
+   height="1000mm"
+   viewBox="0 0 1000 1000"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1" /><g
+     id="layer1"><g
+       id="g199"
+       transform="translate(69.217804,873.36035)"><g
+         id="g197"
+         transform="matrix(1,0,0,1.1433336,2021.7822,-675.63811)"><path
+           style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:19.4999;stroke-dasharray:none;stroke-opacity:1"
+           d="m -1611,233.10005 h 40 V 62.845158 c 0,0.006 -20,-39.745108 -20,-39.745108 0,0 -19.5555,39.245108 -20,39.745108 v 170.254892 0"
+           id="path190" /><path
+           style="fill:#e7e7e8;fill-opacity:1;stroke:none;stroke-width:13.2698;stroke-dasharray:none;stroke-opacity:1"
+           d="m -1601,225.5 h 20 V 62.845158 c 0,0.006 -10,-21.865884 -10,-21.865884 0,0 -9.7778,21.402807 -10,21.865884 V 225.5 v 0"
+           id="path191" /></g><g
+         id="g193"
+         transform="matrix(1.380932,0,0,1.3382285,-2705.7428,-1163.7904)"><circle
+           style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+           id="circle189"
+           cx="2270.5835"
+           cy="462.11667"
+           r="40.000015" /><ellipse
+           style="fill:#e7e7e8;fill-opacity:1;stroke:none;stroke-width:0.668582;stroke-dasharray:none;stroke-opacity:1"
+           id="path189"
+           cx="2271.0581"
+           cy="462.61667"
+           rx="33.416546"
+           ry="33.441677" /><path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:10;stroke-dasharray:none;stroke-opacity:1"
+           d="m 2271,497 v -35 l 27,-24"
+           id="path192" /><path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:10;stroke-dasharray:none;stroke-opacity:1"
+           d="m 2271,462 -27,-23"
+           id="path193" /></g><ellipse
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:10.4767;stroke-dasharray:none;stroke-opacity:1"
+         id="path198"
+         cx="430.52917"
+         cy="-370"
+         rx="50"
+         ry="49.39257" /></g></g></svg>
