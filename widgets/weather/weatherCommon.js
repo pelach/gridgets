@@ -96,64 +96,69 @@ export function getWeatherAssets(extensionPath, code, isDay, folderName = '3x3',
         bgImagePath: '',
     };
 
-    const getImgPath = (name) => `${extensionPath}/assets/weather/${folderName}/${name}-${timeOfDay}.png`;
+    const getImgPath = (name) => `${extensionPath}/assets/weather/${folderName}/${name}.png`;
     const getIconPath = (name) => `${extensionPath}/assets/weather/icons/wi_${name}.svg`;
 
     if (effectiveCode === WEATHER_CODE_CLEAR) {
         assets.iconPath = isDay ? getIconPath('clear-day') : getIconPath('clear-night');
         assets.bgStart = isDay ? '#2b84d4' : '#121e33';
         assets.bgEnd = isDay ? '#1a5a9e' : '#0a1221';
-        assets.bgImagePath = getImgPath('clear');
+        assets.bgImagePath = isDay ? getImgPath('clear-day') : getImgPath('clear-night');
     } else if (effectiveCode === WEATHER_CODE_PARTLY_CLOUDY) {
         assets.iconPath = isDay ? getIconPath('partly-cloudy-day') : getIconPath('partly-cloudy-night');
         assets.bgStart = isDay ? '#5b8cbd' : '#25354a';
         assets.bgEnd = isDay ? '#3d6a94' : '#152335';
-        assets.bgImagePath = getImgPath('partly-cloudy');
-    } else if (effectiveCode === WEATHER_CODE_CLOUDY_1 || effectiveCode === WEATHER_CODE_CLOUDY_2) {
+        assets.bgImagePath = isDay ? getImgPath('partly-cloudy-day') : getImgPath('partly-cloudy-night');
+    } else if (effectiveCode === WEATHER_CODE_CLOUDY_1) {
         assets.iconPath = getIconPath('cloudy');
         assets.bgStart = isDay ? '#121D2B' : '#14181a';
         assets.bgEnd = isDay ? '#1a2a3d' : '#0c0f12';
-        assets.bgImagePath = getImgPath('cloudy');
+        assets.bgImagePath = getImgPath('cloudy-day');
+    } else if (effectiveCode === WEATHER_CODE_CLOUDY_2) {
+        assets.iconPath = getIconPath('overcast');
+        assets.bgStart = isDay ? '#0e1520' : '#0c0f12';
+        assets.bgEnd = isDay ? '#162030' : '#0a0d10';
+        assets.bgImagePath = getImgPath('overcast-day');
     } else if (WEATHER_CODE_FOG_GROUP.includes(effectiveCode)) {
         assets.iconPath = getIconPath('fog');
         assets.bgStart = isDay ? '#a1aba3' : '#3c403e';
         assets.bgEnd = isDay ? '#7a8480' : '#252825';
-        assets.bgImagePath = getImgPath('fog');
+        assets.bgImagePath = getImgPath('fog-day');
     } else if (WEATHER_CODE_DUST_GROUP.includes(effectiveCode)) {
         assets.iconPath = getIconPath('dust');
         assets.bgStart = isDay ? '#c2a884' : '#4a3d2c';
         assets.bgEnd = isDay ? '#a08460' : '#302618';
-        assets.bgImagePath = getImgPath('sandstorm');
+        assets.bgImagePath = getImgPath('sandstorm-day');
     } else if (WEATHER_CODE_SLEET_GROUP.includes(effectiveCode)) {
         assets.iconPath = getIconPath('sleet');
         assets.bgStart = isDay ? '#5a8f9c' : '#1d343b';
         assets.bgEnd = isDay ? '#3d6e78' : '#112126';
-        assets.bgImagePath = getImgPath('freezing-rain');
+        assets.bgImagePath = getImgPath('rain-day');
     } else if (WEATHER_CODE_HAIL_GROUP.includes(effectiveCode)) {
         assets.iconPath = getIconPath('hail');
         assets.bgStart = isDay ? '#7b8c9c' : '#212a33';
         assets.bgEnd = isDay ? '#5a6b7a' : '#131a22';
-        assets.bgImagePath = getImgPath('hail');
+        assets.bgImagePath = getImgPath('rain-day');
     } else if (WEATHER_CODE_RAIN_GROUP.includes(effectiveCode)) {
         assets.iconPath = getIconPath('rain');
         assets.bgStart = isDay ? '#121D2B' : '#14181a';
         assets.bgEnd = isDay ? '#1a2a3d' : '#0c0f12';
-        assets.bgImagePath = getImgPath('rain');
+        assets.bgImagePath = getImgPath('rain-day');
     } else if (WEATHER_CODE_THUNDERSTORMS_GROUP.includes(effectiveCode)) {
         assets.iconPath = getIconPath('thunderstorms');
         assets.bgStart = '#232533';
         assets.bgEnd = '#151622';
-        assets.bgImagePath = getImgPath('storm');
+        assets.bgImagePath = getImgPath('rain-day');
     } else if (effectiveCode === WEATHER_CODE_SNOW_BLIZZARD) {
         assets.iconPath = getIconPath('snow');
         assets.bgStart = isDay ? '#b8d6eb' : '#465661';
         assets.bgEnd = isDay ? '#8bb5d0' : '#2e3b44';
-        assets.bgImagePath = getImgPath('blizzard');
+        assets.bgImagePath = getImgPath('snow-day');
     } else if (WEATHER_CODE_SNOW_GROUP.includes(effectiveCode)) {
         assets.iconPath = getIconPath('snow');
         assets.bgStart = isDay ? '#8dafc4' : '#243a4a';
         assets.bgEnd = isDay ? '#6d92a8' : '#162633';
-        assets.bgImagePath = getImgPath('snow');
+        assets.bgImagePath = getImgPath('snow-day');
     }
 
     if (!GLib.file_test(assets.iconPath, GLib.FileTest.EXISTS)) {
