@@ -218,6 +218,9 @@ export function buildWeatherSettings(grid, rowIdx, widget, settings, saveHandler
     grid.attach(fahrenheitSwitch, 1, rowIdx, 1, 1);
     rowIdx++;
 
+    const globalDynamicColorDefault = settings.get_boolean('weather-dynamic-color');
+    const globalDynamicImageDefault = settings.get_boolean('weather-dynamic-image');
+
     saveHandlers.push((target) => {
         const selectedCity = cityPicker.getSelectedLocation();
         if (selectedCity && selectedCity.name) {
@@ -227,8 +230,18 @@ export function buildWeatherSettings(grid, rowIdx, widget, settings, saveHandler
                 target.lon = selectedCity.longitude;
             }
         }
-        target.dynamicColor = dynamicColorSwitch.get_active();
-        target.dynamicImage = dynamicOverlaySwitch.get_active();
+        const userColor = dynamicColorSwitch.get_active();
+        if (userColor !== globalDynamicColorDefault) {
+            target.dynamicColor = userColor;
+        } else {
+            delete target.dynamicColor;
+        }
+        const userImage = dynamicOverlaySwitch.get_active();
+        if (userImage !== globalDynamicImageDefault) {
+            target.dynamicImage = userImage;
+        } else {
+            delete target.dynamicImage;
+        }
         target.useFahrenheit = fahrenheitSwitch.get_active();
     });
 

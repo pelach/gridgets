@@ -30,8 +30,8 @@ import { isAnimatedImageFile } from '../utils/widgetUtils.js';
 const WIDGET_CREATORS = {
     'time': (data, w, h, x, y) => createTimeNode(data, w, h, x, y),
     'weather': (data, w, h, x, y) => {
-        const dynamicColor = data.dynamicColor !== undefined ? data.dynamicColor : (data.globalWeatherDynamicColor !== false);
-        const dynamicImage = data.dynamicImage !== undefined ? data.dynamicImage : (data.globalWeatherDynamicImage !== false);
+    const dynamicColor = data.dynamicColor !== undefined ? data.dynamicColor : (data.globalWeatherDynamicColor !== false);
+    const dynamicImage = data.dynamicImage !== undefined ? data.dynamicImage : (data.globalWeatherDynamicImage !== false);
         return createWeatherNode(data, w, h, x, y, dynamicColor, dynamicImage);
     },
     'music': (data, w, h, x, y) => createMusicNode(data, w, h, x, y),
