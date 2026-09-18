@@ -4,7 +4,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import Soup from 'gi://Soup?version=3.0';
 import Pango from 'gi://Pango';
-import { resolveWidgetBackgroundColor, resolveWidgetForegroundColor, resolveExplicitFontFamily, DEFAULT_BG_COLOR, buildBaseWidgetStyle, celsiusToFahrenheit, parseCssColor } from '../../utils/widgetUtils.js';
+import { resolveWidgetBackgroundColor, resolveWidgetForegroundColor, resolveExplicitFontFamily, DEFAULT_BG_COLOR, buildBaseWidgetStyle, celsiusToFahrenheit, parseCssColor, isDarkBackgroundColor } from '../../utils/widgetUtils.js';
 import { isActorDestroyed, watchActorLifecycle } from '../../utils/actorLifecycle.js';
 import { MONTH_NAMES_ABBREVIATED as MONTH_NAMES } from '../../shell/widgetUIUtils.js';
 
@@ -20,6 +20,9 @@ export const DEFAULT_WEATHER_BORDER_RADIUS_PX = 24;
 
 export const FORECAST_MIN_GRID_WIDTH = 6;
 export const SIMPLE_MIN_GRID_WIDTH = 4;
+
+const TEXT_COLOR_ON_LIGHT_BG = '#000000';
+const TEXT_COLOR_ON_DARK_BG = '#ffffff';
 
 
 // Font-family CSS or empty string to inherit the system theme font.
@@ -315,9 +318,9 @@ export function updateWidgetStyle(widgetNode, bgImageActor, widgetData, assets, 
 
     if (isDynamicColor) {
         const bgEnd = assets.bgEnd || assets.bgStart;
-        const bgRgb = parseCssColor(assets.bgStart || DEFAULT_BG_COLOR);
-        const luminance = (bgRgb.r * 299 + bgRgb.g * 587 + bgRgb.b * 114) / 1000;
-        const textColor = luminance > 128 ? '#000000' : '#ffffff';
+        const textColor = isDarkBackgroundColor(assets.bgStart || DEFAULT_BG_COLOR)
+            ? TEXT_COLOR_ON_DARK_BG
+            : TEXT_COLOR_ON_LIGHT_BG;
         widgetNode.style = `
             background-gradient-direction: vertical;
             background-gradient-start: ${assets.bgStart};
