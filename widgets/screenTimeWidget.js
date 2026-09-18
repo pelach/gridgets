@@ -52,6 +52,16 @@ const MAX_VISIBLE_APPS = 4;
 const SECONDARY_TEXT_OPACITY = 0.63;
 const DISABLED_CONTROL_OPACITY = Math.round(255 * SECONDARY_TEXT_OPACITY);
 const GRID_LINE_ALPHA = 0.3;
+const PANEL_PADDING_TOP_PX = 16;
+const PANEL_PADDING_BOTTOM_PX = 16;
+const PANEL_PADDING_LEFT_PX = 20;
+const PANEL_PADDING_RIGHT_PX = 12;
+const HEADER_MARGIN_BOTTOM_PX = 12;
+const HEADER_PADDING_RIGHT_PX = 5;
+const NAV_BUTTON_BORDER_RADIUS_PX = 6;
+const AXIS_LABEL_SPACING_PX = 4;
+const AXIS_MARGIN_BOTTOM_PX = 6;
+const APP_ROWS_SPACING_PX = 14;
 
 function addDays(dateString, delta) {
     const [y, m, d] = dateString.split('-').map(Number);
@@ -410,21 +420,21 @@ export function createScreenTimeNode(config, width, height, xPosition, yPosition
         leftPanel.set_width(mainWidth);
         rightPanel.set_width(totalWidth - mainWidth);
 
-        const padTop = Math.round(16 * s);
-        const padBottom = Math.round(16 * s);
-        const padLeft = Math.round(20 * s);
-        const padRight = Math.round(12 * s);
+        const padTop = Math.round(PANEL_PADDING_TOP_PX * s);
+        const padBottom = Math.round(PANEL_PADDING_BOTTOM_PX * s);
+        const padLeft = Math.round(PANEL_PADDING_LEFT_PX * s);
+        const padRight = Math.round(PANEL_PADDING_RIGHT_PX * s);
         leftPanel.style = `background-color: ${bgColor}; border-radius: ${borderRadius}px 0 0 ${borderRadius}px;`
             + `padding: ${padTop}px ${padRight}px ${padBottom}px ${padLeft}px;`;
 
         rightPanel.style = `background-color: ${sideBgColor}; border-radius: 0 ${borderRadius}px ${borderRadius}px 0;`
             + `padding: ${padTop}px ${padLeft}px;`;
 
-        headerBox.style = `margin-bottom: ${Math.round(12 * s)}px; padding-right: ${Math.round(5 * s)}px;`;
+        headerBox.style = `margin-bottom: ${Math.round(HEADER_MARGIN_BOTTOM_PX * s)}px; padding-right: ${Math.round(HEADER_PADDING_RIGHT_PX * s)}px;`;
         totalTimeLabel.style = `${fontCss}color: ${textColor}; font-size: ${Math.round(HEADER_FONT_SIZE_PX * s)}px; font-weight: 300;`;
 
         prevButton.style = `width: ${Math.round(NAV_BUTTON_SIZE_PX * s)}px; height: ${Math.round(NAV_BUTTON_SIZE_PX * s)}px;`
-            + `border: 1px solid ${textRgba(0.14)}; border-radius: ${Math.round(6 * s)}px; background-color: transparent;`;
+            + `border: 1px solid ${textRgba(0.14)}; border-radius: ${Math.round(NAV_BUTTON_BORDER_RADIUS_PX * s)}px; background-color: transparent;`;
         nextButton.style = prevButton.style;
 
         const chartWrapWidth = mainWidth - padLeft - padRight;
@@ -445,9 +455,9 @@ export function createScreenTimeNode(config, width, height, xPosition, yPosition
 
         xAxisBox.set_position(0, plotHeight + Math.round(4 * s));
         xAxisBox.set_size(plotWidth, Math.round(X_AXIS_HEIGHT_PX * s));
-        xAxisBox.style = `margin-bottom: ${Math.round(6 * s)}px;`;
+        xAxisBox.style = `margin-bottom: ${Math.round(AXIS_MARGIN_BOTTOM_PX * s)}px;`;
 
-        appRowsBox.style = `spacing: ${Math.round(14 * s)}px;`;
+        appRowsBox.style = `spacing: ${Math.round(APP_ROWS_SPACING_PX * s)}px;`;
 
         renderDynamic();
     }

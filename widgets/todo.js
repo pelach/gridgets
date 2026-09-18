@@ -21,6 +21,16 @@ const TASK_TEXT_FONT_SIZE_PX = 13;
 const CHECKBOX_SIZE_PX = 16;
 const ROW_SPACING_PX = 8;
 const BORDER_ALPHA = 0.14;
+const COUNTER_ROW_MARGIN_TOP_PX = 6;
+const COUNTER_ROW_SPACING_PX = 8;
+const LIST_ICON_SIZE_PX = 20;
+const ADD_BUTTON_ICON_SIZE_PX = 18;
+const PILL_RADIUS_PX = 9999;
+const TASK_ROW_SPACING_PX = 10;
+const CHECKBOX_BORDER_WIDTH_PX = 1.5;
+const CHECKMARK_ICON_SIZE_PX = 10;
+const DELETE_ICON_SIZE_PX = 13;
+const DELETE_BUTTON_OPACITY = 0.45;
 
 const DEFAULT_TASKS = [
     { text: 'Make tea', done: false },
@@ -73,12 +83,12 @@ export function createTodoNode(config, width, height, xPosition, yPosition) {
 
     const counterRow = new St.BoxLayout({
         orientation: Clutter.Orientation.HORIZONTAL,
-        style: 'margin-top: 6px; spacing: 8px;',
+        style: `margin-top: ${COUNTER_ROW_MARGIN_TOP_PX}px; spacing: ${COUNTER_ROW_SPACING_PX}px;`,
     });
 
     const listIcon = new St.Icon({
         icon_name: 'view-list-symbolic',
-        icon_size: 20,
+        icon_size: LIST_ICON_SIZE_PX,
         style: accentStyle,
         y_align: Clutter.ActorAlign.CENTER,
     });
@@ -96,7 +106,7 @@ export function createTodoNode(config, width, height, xPosition, yPosition) {
     const addButton = new St.Button({
         child: new St.Icon({
             icon_name: 'list-add-symbolic',
-            icon_size: 18,
+            icon_size: ADD_BUTTON_ICON_SIZE_PX,
             style: accentStyle,
         }),
         reactive: true,
@@ -114,7 +124,7 @@ export function createTodoNode(config, width, height, xPosition, yPosition) {
         orientation: Clutter.Orientation.VERTICAL,
         x_expand: true,
         y_expand: true,
-        style: 'spacing: 8px; padding-left: 10px;',
+        style: `spacing: ${COUNTER_ROW_SPACING_PX}px; padding-left: ${TASK_ROW_PADDING_H_PX}px;`,
     });
     mainBox.add_child(rightColumn);
 
@@ -161,12 +171,12 @@ export function createTodoNode(config, width, height, xPosition, yPosition) {
             + `font-weight: 700; color: ${textColor}; opacity: ${SECONDARY_OPACITY};`;
         countLabel.style = `${fontCss}font-size: ${px(COUNT_FONT_SIZE_PX)}px; `
             + `font-weight: 300; color: ${textColor};`;
-        listIcon.icon_size = px(20);
-        addButton.style = rowBackgroundStyle + ` border-radius: 9999px;`
+        listIcon.icon_size = px(LIST_ICON_SIZE_PX);
+        addButton.style = rowBackgroundStyle + ` border-radius: ${PILL_RADIUS_PX}px;`
             + `width: ${px(ADD_BUTTON_SIZE_PX)}px; height: ${px(ADD_BUTTON_SIZE_PX)}px;`;
-        addButton.child.icon_size = px(18);
+        addButton.child.icon_size = px(ADD_BUTTON_ICON_SIZE_PX);
 
-        rightColumn.style = `spacing: ${px(ROW_SPACING_PX)}px; padding-left: ${px(10)}px;`;
+        rightColumn.style = `spacing: ${px(TASK_ROW_SPACING_PX)}px; padding-left: ${px(TASK_ROW_PADDING_H_PX)}px;`;
         taskList.style = `spacing: ${px(ROW_SPACING_PX)}px;`;
         entryRow.style = rowBackgroundStyle + ` border-radius: ${px(TASK_ROW_RADIUS_PX)}px;`
             + `padding: ${Math.max(1, px(TASK_ROW_PADDING_V_PX) - 3)}px ${px(TASK_ROW_PADDING_H_PX)}px;`;
@@ -189,16 +199,16 @@ export function createTodoNode(config, width, height, xPosition, yPosition) {
             x_expand: true,
             style: rowBackgroundStyle + ` border-radius: ${px(TASK_ROW_RADIUS_PX)}px;`
                 + `padding: ${px(TASK_ROW_PADDING_V_PX)}px ${px(TASK_ROW_PADDING_H_PX)}px;`
-                + `spacing: ${px(10)}px;`,
+                + `spacing: ${px(TASK_ROW_SPACING_PX)}px;`,
         });
 
         const checkbox = new St.Button({
             reactive: true,
             can_focus: true,
             style: task.done
-                ? `background-color: ${accentHex}; border-radius: 9999px;`
+                ? `background-color: ${accentHex}; border-radius: ${PILL_RADIUS_PX}px;`
                     + `width: ${checkboxSize}px; height: ${checkboxSize}px;`
-                : `border: 1.5px solid ${textRgba(0.35)}; border-radius: 9999px;`
+                : `border: ${CHECKBOX_BORDER_WIDTH_PX}px solid ${textRgba(0.35)}; border-radius: ${PILL_RADIUS_PX}px;`
                     + `width: ${checkboxSize}px; height: ${checkboxSize}px;`,
             y_align: Clutter.ActorAlign.CENTER,
         });
@@ -206,7 +216,7 @@ export function createTodoNode(config, width, height, xPosition, yPosition) {
         if (task.done) {
             checkbox.child = new St.Icon({
                 icon_name: 'object-select-symbolic',
-                icon_size: px(10),
+                icon_size: px(CHECKMARK_ICON_SIZE_PX),
                 style: `color: ${resolveTextOnAccentColor(accentHex)};`,
             });
         }
@@ -234,11 +244,11 @@ export function createTodoNode(config, width, height, xPosition, yPosition) {
         const deleteButton = new St.Button({
             child: new St.Icon({
                 icon_name: 'edit-delete-symbolic',
-                icon_size: px(13),
+                icon_size: px(DELETE_ICON_SIZE_PX),
             }),
             reactive: true,
             can_focus: true,
-            style: `opacity: 0.45;`,
+            style: `opacity: ${DELETE_BUTTON_OPACITY};`,
             y_align: Clutter.ActorAlign.CENTER,
         });
         deleteButton.connect('clicked', () => {

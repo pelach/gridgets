@@ -11,6 +11,7 @@ import { createSparklineTile, createTilesRow, BASE_CONTAINER_WIDTH, BASE_CONTAIN
 const BYTES_PER_KILOBYTE = 1024;
 const BYTES_PER_MEGABYTE = 1024 * 1024;
 const SPARK_BASELINE_BYTES = BYTES_PER_KILOBYTE;
+const NETWORK_TILE_ROW_SPACING_PX = 4;
 
 export function formatBytesPerSecond(bytesPerSec) {
     if (bytesPerSec < BYTES_PER_KILOBYTE)
@@ -44,7 +45,7 @@ export function createNetworkSpeedNode(config, width, height, xPosition, yPositi
         fontCss,
         textColor,
         scale,
-        rowSpacingPx: 4,
+        rowSpacingPx: NETWORK_TILE_ROW_SPACING_PX,
         drawSamples: drawSpeedSparkline,
     });
 
@@ -57,7 +58,7 @@ export function createNetworkSpeedNode(config, width, height, xPosition, yPositi
         fontCss,
         textColor,
         scale,
-        rowSpacingPx: 4,
+        rowSpacingPx: NETWORK_TILE_ROW_SPACING_PX,
         drawSamples: drawSpeedSparkline,
     });
 
