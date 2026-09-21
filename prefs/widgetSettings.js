@@ -379,6 +379,30 @@ export function buildTimeSettings(grid, rowIdx, widget, settings, saveHandlers) 
 }
 
 export function buildMusicSettings(grid, rowIdx, widget, saveHandlers) {
+    // --- Layout Style (Normal vs Visualizer) ---
+    if (widget.layoutType === 'visualizer') {
+        const vizModeLabel = new Gtk.Label({ label: 'Visualizer Pattern:', xalign: 0, hexpand: true });
+        const vizModes = ['bars', 'wave'];
+        const vizLabels = ['16-Bar Equalizer', 'Fluid Sine Wave'];
+
+        const vizModeCombo = new Gtk.DropDown({
+            model: Gtk.StringList.new(vizLabels),
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.END,
+        });
+
+        const currentVizMode = widget.visualizerMode || 'bars';
+        const vizIdx = vizModes.indexOf(currentVizMode);
+        vizModeCombo.set_selected(vizIdx >= 0 ? vizIdx : 0);
+
+        grid.attach(vizModeLabel, 0, rowIdx, 1, 1);
+        grid.attach(vizModeCombo, 1, rowIdx, 1, 1);
+        rowIdx++;
+
+        saveHandlers.push((target) => {
+            target.visualizerMode = vizModes[vizModeCombo.get_selected()] || 'bars';
+        });
+    }
     const showControlsLabel = new Gtk.Label({ label: 'Show Player Controls:', xalign: 0, hexpand: true });
     const showControlsSwitch = new Gtk.Switch({ valign: Gtk.Align.CENTER, halign: Gtk.Align.END });
     showControlsSwitch.set_active(widget.showControls !== false);

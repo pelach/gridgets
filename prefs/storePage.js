@@ -8,6 +8,7 @@ import {
     addWeatherWidget,
     addWeatherBarsWidget,
     addMusicWidget,
+    addMusicVisualizerWidget,
     addPomodoroWidget,
     addPomodoroFocusWidget,
     addCpuRamWidget,
@@ -205,6 +206,7 @@ export function buildStorePage(window, settings, extensionPath) {
     page.add(createCategoryGroup('Media', [
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.music[0]], () => addMusicWidget(settings, 4, 4)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.music[1]], () => addMusicWidget(settings, 8, 4)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.musicVisualizer, () => addMusicVisualizerWidget(settings, 4, 4)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.media[0]], () => openAddImageDialog(window, settings)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS[STORE_CATEGORIES.media[1]], () => openAddSlideshowDialog(window, settings)),
     ]));

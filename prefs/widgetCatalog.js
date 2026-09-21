@@ -43,6 +43,13 @@ export const STORE_WIDGETS = Object.freeze({
         thumbnail: 'music/music-large.svg',
         fallbackIconName: 'audio-x-generic-symbolic',
     },
+    musicVisualizer: {
+        title: 'Music Visualizer',
+        description: 'Audio visualizer displaying animated frequency spectrum or waveforms.',
+        gridSize: '4x4',
+        thumbnail: 'music/music-small.svg', 
+        fallbackIconName: 'audio-x-generic-symbolic',
+    },
     timeAndDate: {
         title: 'Time & Date',
         description: 'A clean digital clock with the current date.',
@@ -208,7 +215,7 @@ export const STORE_WIDGETS = Object.freeze({
 
 export const STORE_CATEGORIES = Object.freeze({
     weather: ['weatherStandard', 'weatherMinimal', 'weatherForecast', 'weatherBars', 'sunScheduleWidget'],
-    music: ['musicPlayer', 'musicPlayerWide'],
+    music: ['musicPlayer', 'musicPlayerWide', 'musicVisualizer'],
     time: ['timeAndDate', 'analogClock', 'worldClock', 'calendarWidget', 'calendarGrid'],
     media: ['imageGif', 'imageSlideshow'],
     utilities: [
@@ -245,6 +252,9 @@ function getWeatherEntryKey(widget) {
 }
 
 function getMusicEntryKey(widget) {
+    if (widget.layoutType === 'visualizer') {
+        return 'musicVisualizer';
+    }
     if (isWideMusicLayout(widget)) {
         return 'musicPlayerWide';
     }
