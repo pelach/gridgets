@@ -258,6 +258,7 @@ export function createMoodNode(config, width, height, xPosition, yPosition) {
     });
 
     attachResponsiveScaler(container, REF_WIDTH_PX, REF_HEIGHT_PX, (_ratio, w, h) => {
+        if (isActorDestroyed(container)) return;
         applyScale(Math.min(w / REF_WIDTH_PX, h / REF_HEIGHT_PX));
     });
 

@@ -32,7 +32,7 @@ export function createWeatherNode(widgetData, width, height, xPosition, yPositio
         uiElements = buildForecastLayout(layout, widgetData, extensionPath);
         attachForecastScaler(widgetNode, uiElements, widgetData);
     } else if (layoutVariant === 'simple') {
-        uiElements = buildSimpleLayout(layout, widgetData, extensionPath);
+        uiElements = buildSimpleLayout(layout, widgetData);
         attachSimpleScaler(widgetNode, uiElements, widgetData);
     } else {
         uiElements = buildStandardLayout(layout, widgetData, extensionPath);

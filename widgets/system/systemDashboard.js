@@ -35,6 +35,11 @@ const CARD_BG_DARK_ALPHA = 0.05;
 const CARD_BG_LIGHT_ALPHA = 0.04;
 const CARD_BORDER_DARK_ALPHA = 0.06;
 const CARD_BORDER_LIGHT_ALPHA = 0.10;
+const BASE_CARD_HEADER_MARGIN_BOTTOM_PX = 8;
+const BASE_CONTENT_BOX_PADDING_PX = 10;
+const BASE_CONTENT_BOX_SPACING_PX = 10;
+const NETWORK_GRID_SPACING_MULTIPLIER = 2;
+const BASE_NETWORK_STAT_SPACING_PX = 4;
 
 function drawTrendChart(ctx, w, h, samples, accentHex) {
     if (w === 0 || h === 0) return;
@@ -133,7 +138,7 @@ export function createSystemDashboardNode(config, width, height, xPosition, yPos
         const header = new St.BoxLayout({
             orientation: Clutter.Orientation.HORIZONTAL,
             x_expand: true,
-            style: `margin-bottom: ${Math.round(8 * scale)}px;`,
+            style: `margin-bottom: ${Math.round(BASE_CARD_HEADER_MARGIN_BOTTOM_PX * scale)}px;`,
         });
         const titleLabel = new St.Label({
             text: titleText,
@@ -152,7 +157,7 @@ export function createSystemDashboardNode(config, width, height, xPosition, yPos
         orientation: Clutter.Orientation.VERTICAL,
         x_expand: true,
         y_expand: true,
-        style: `padding: ${Math.round(10 * scale)}px; spacing: ${Math.round(10 * scale)}px;`,
+        style: `padding: ${Math.round(BASE_CONTENT_BOX_PADDING_PX * scale)}px; spacing: ${Math.round(BASE_CONTENT_BOX_SPACING_PX * scale)}px;`,
     });
 
     const processorCard = new St.BoxLayout({
@@ -176,14 +181,14 @@ export function createSystemDashboardNode(config, width, height, xPosition, yPos
     const networkGrid = new St.BoxLayout({
         orientation: Clutter.Orientation.HORIZONTAL,
         x_expand: true,
-        style: `spacing: ${cardGap * 2}px;`,
+        style: `spacing: ${cardGap * NETWORK_GRID_SPACING_MULTIPLIER}px;`,
     });
 
     const createNetworkStat = (labelText) => {
         const stat = new St.BoxLayout({
             orientation: Clutter.Orientation.VERTICAL,
             x_expand: true,
-            style: `spacing: ${Math.round(4 * scale)}px;`,
+            style: `spacing: ${Math.round(BASE_NETWORK_STAT_SPACING_PX * scale)}px;`,
         });
         const label = new St.Label({
             text: labelText,

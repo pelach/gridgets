@@ -5,7 +5,7 @@ import Clutter from 'gi://Clutter';
 import Pango from 'gi://Pango';
 import Soup from 'gi://Soup?version=3.0';
 import { SECONDARY_OPACITY, cssColorToRgba, resolveExplicitFontFamily, resolveWidgetForegroundColor } from '../utils/widgetUtils.js';
-import { createWidgetContainer, connectTimerCleanup, registerWidgetCleanup, attachResponsiveScaler } from '../shell/widgetUIUtils.js';
+import { createWidgetContainer, registerWidgetCleanup, attachResponsiveScaler } from '../shell/widgetUIUtils.js';
 import { isActorDestroyed } from '../utils/actorLifecycle.js';
 
 const QUOTE_ROTATE_INTERVAL_SEC = 30;
@@ -107,7 +107,6 @@ export function createQuotesNode(config, width, height, xPosition, yPosition) {
         return GLib.SOURCE_CONTINUE;
     });
 
-    connectTimerCleanup(container, state);
     registerWidgetCleanup(container, () => {
         if (state.refreshTimerId) {
             GLib.Source.remove(state.refreshTimerId);

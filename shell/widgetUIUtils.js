@@ -302,24 +302,22 @@ export function attachButtonFeedback(button) {
 }
 
 export function attachResponsiveScaler(widgetNode, refWidth, refHeight, updateCallback) {
-    let disposed = false;
-
     const update = () => {
-        if (disposed) return;
         const currentWidth = widgetNode.width || refWidth;
         const currentHeight = widgetNode.height || refHeight;
         const scale = Math.min(currentWidth / refWidth, currentHeight / refHeight);
         updateCallback(scale, currentWidth, currentHeight);
     };
 
-    widgetNode.connect('notify::width', update);
-    widgetNode.connect('notify::height', update);
+    const widthId = widgetNode.connect('notify::width', update);
+    const heightId = widgetNode.connect('notify::height', update);
     widgetNode.connect('destroy', () => {
-        disposed = true;
+        widgetNode.disconnect(widthId);
+        widgetNode.disconnect(heightId);
     });
 
     GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-        if (!disposed) {
+        if (!isActorDestroyed(widgetNode)) {
             update();
         }
         return GLib.SOURCE_REMOVE;

@@ -11,6 +11,7 @@ import { createLiveCitySearchRow, buildOpenMeteoCitySearchRow } from './citySear
 import { createAppSelectionControls } from './appSelection.js';
 import { buildCaptionControls } from './captionControls.js';
 import { getConnectedMonitorsCount, buildMonitorEntries } from './displayUtils.js';
+import { DEFAULT_WORLD_CLOCK_CITIES, MIN_SLIDESHOW_INTERVAL_SEC, MAX_SLIDESHOW_INTERVAL_SEC, STEP_SLIDESHOW_INTERVAL_SEC, DEFAULT_SLIDESHOW_INTERVAL_SEC } from './widgetConstants.js';
 
 const MIN_POMODORO_MINUTES = 1;
 const MAX_POMODORO_MINUTES = 120;
@@ -24,17 +25,6 @@ const DEFAULT_SESSIONS_BEFORE_LONG_BREAK = 4;
 const RSS_MIN_REFRESH_MINUTES = 5;
 const RSS_MAX_REFRESH_MINUTES = 720;
 const RSS_REFRESH_STEP_MINUTES = 5;
-
-const DEFAULT_WORLD_CLOCK_CITIES = [
-    { name: 'London', timezone: 'Europe/London', country: 'GB' },
-    { name: 'New York', timezone: 'America/New_York', country: 'US' },
-    { name: 'Moscow', timezone: 'Europe/Moscow', country: 'RU' },
-];
-
-const MIN_SLIDESHOW_INTERVAL_SEC = 5;
-const MAX_SLIDESHOW_INTERVAL_SEC = 3600;
-const STEP_SLIDESHOW_INTERVAL_SEC = 5;
-const DEFAULT_SLIDESHOW_INTERVAL_SEC = 10;
 
 export function buildStandardSettings(grid, rowIdx, widget, settings, saveHandlers) {
     const isImageOrSlideshow = widget.type === 'slideshow' || widget.type === 'image' || widget.imagePath;
@@ -230,6 +220,9 @@ export function buildWeatherSettings(grid, rowIdx, widget, settings, saveHandler
     grid.attach(fahrenheitSwitch, 1, rowIdx, 1, 1);
     rowIdx++;
 
+    const globalDynamicColorDefault = settings.get_boolean('weather-dynamic-color');
+    const globalDynamicImageDefault = settings.get_boolean('weather-dynamic-image');
+
     saveHandlers.push((target) => {
         const selectedCity = cityPicker.getSelectedLocation();
         if (selectedCity && selectedCity.name) {
@@ -239,8 +232,18 @@ export function buildWeatherSettings(grid, rowIdx, widget, settings, saveHandler
                 target.lon = selectedCity.longitude;
             }
         }
-        target.dynamicColor = dynamicColorSwitch.get_active();
-        target.dynamicImage = dynamicOverlaySwitch.get_active();
+        const userColor = dynamicColorSwitch.get_active();
+        if (userColor !== globalDynamicColorDefault) {
+            target.dynamicColor = userColor;
+        } else {
+            delete target.dynamicColor;
+        }
+        const userImage = dynamicOverlaySwitch.get_active();
+        if (userImage !== globalDynamicImageDefault) {
+            target.dynamicImage = userImage;
+        } else {
+            delete target.dynamicImage;
+        }
         target.useFahrenheit = fahrenheitSwitch.get_active();
     });
 

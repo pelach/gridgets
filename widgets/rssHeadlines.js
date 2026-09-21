@@ -22,6 +22,8 @@ const SOURCE_FONT_SIZE_PX = 11;
 const TITLE_FONT_SIZE_PX = 12;
 const SNIPPET_FONT_SIZE_PX = 10;
 const FOOTER_FONT_SIZE_PX = 9;
+const TITLE_DISPLAY_FONT_SIZE_PX = TITLE_FONT_SIZE_PX + 4;
+const SNIPPET_DISPLAY_FONT_SIZE_PX = SNIPPET_FONT_SIZE_PX + 2;
 
 const ROTATE_INTERVAL_SECONDS = 5;
 const FADE_DURATION_MS = 150;
@@ -255,8 +257,8 @@ export function createRssHeadlinesNode(config, width, height, xPosition, yPositi
         sourceLabel.clutter_text.ellipsize = Pango.EllipsizeMode.END;
 
         contentArea.style = `padding: ${px(CONTENT_PADDING_PX)}px;`;
-        articleTitle.style = `${fontCss}font-size: ${px(TITLE_FONT_SIZE_PX + 4)}px; font-weight: 700; color: ${textColor};`;
-        articleSnippet.style = `${fontCss}font-size: ${px(SNIPPET_FONT_SIZE_PX + 2)}px;`
+        articleTitle.style = `${fontCss}font-size: ${px(TITLE_DISPLAY_FONT_SIZE_PX)}px; font-weight: 700; color: ${textColor};`;
+        articleSnippet.style = `${fontCss}font-size: ${px(SNIPPET_DISPLAY_FONT_SIZE_PX)}px;`
             + `color: ${textColor}; opacity: ${SECONDARY_OPACITY};`;
         articleSnippet.clutter_text.line_wrap = true;
         articleSnippet.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;

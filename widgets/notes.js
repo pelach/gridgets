@@ -2,7 +2,7 @@ import St from 'gi://St';
 import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import { SECONDARY_OPACITY, cssColorToRgba, getGridgetsDataDir, loadJsonFromFileAsync, resolveExplicitFontFamily, resolveWidgetForegroundColor, saveJsonToFile, saveJsonToFileSync } from '../utils/widgetUtils.js';
-import { createWidgetContainer, registerWidgetCleanup, scheduleDeferredUpdate, attachButtonFeedback } from '../shell/widgetUIUtils.js';
+import { createWidgetContainer, registerWidgetCleanup, scheduleDeferredUpdate, attachButtonFeedback, attachResponsiveScaler } from '../shell/widgetUIUtils.js';
 import { BUTTON_PRIMARY } from '../desktopGrid/constants.js';
 import { isActorDestroyed } from '../utils/actorLifecycle.js';
 
@@ -25,6 +25,9 @@ const MARKDOWN_RULES = [
     [/^# (.*$)/gm, '<span size="xx-large" weight="bold">$1</span>'],
 ];
 
+const REF_WIDTH_PX = 240;
+const REF_HEIGHT_PX = 160;
+
 function convertMarkdownToPango(text) {
     if (!text) return '';
     let escaped = GLib.markup_escape_text(text, -1);
@@ -40,11 +43,6 @@ export function createNotesNode(config, width, height, xPosition, yPosition) {
     const textColor = resolveWidgetForegroundColor(config);
     const container = createWidgetContainer(config, width, height, xPosition, yPosition);
     container.style += ` border: 1px solid ${cssColorToRgba(textColor, BORDER_ALPHA)};`;
-
-    const scale = Math.min(width / BASE_CONTAINER_WIDTH, height / BASE_CONTAINER_HEIGHT);
-    const titleFontSize = Math.max(MIN_FONT_SIZE, Math.round(BASE_TITLE_FONT_SIZE * scale));
-    const contentFontSize = Math.max(MIN_FONT_SIZE, Math.round(BASE_CONTENT_FONT_SIZE * scale));
-    const iconSize = Math.max(MIN_ICON_SIZE, Math.round(BASE_ICON_SIZE * scale));
 
     const baseDir = getGridgetsDataDir('notes');
     const notesFilePath = GLib.build_filenamev([
@@ -68,14 +66,13 @@ export function createNotesNode(config, width, height, xPosition, yPosition) {
 
     const titleLabel = new St.Label({
         text: 'Quick Notes',
-        style: `${fontCss}color: ${textColor}; font-size: ${titleFontSize}px; opacity: ${SECONDARY_OPACITY};`,
+        style: `${fontCss}color: ${textColor}; opacity: ${SECONDARY_OPACITY};`,
         x_expand: true,
         y_align: Clutter.ActorAlign.CENTER,
     });
 
     const editIcon = new St.Icon({
         icon_name: 'document-edit-symbolic',
-        icon_size: iconSize,
         style: `color: ${textColor}; opacity: 0.6;`,
     });
 
@@ -107,7 +104,7 @@ export function createNotesNode(config, width, height, xPosition, yPosition) {
     contentBox.add_child(scrollView);
 
     const displayLabel = new St.Label({
-        style: `${fontCss}color: ${textColor}; font-size: ${contentFontSize}px;`,
+        style: `${fontCss}color: ${textColor};`,
         x_expand: true,
         y_expand: true,
     });
@@ -120,8 +117,8 @@ export function createNotesNode(config, width, height, xPosition, yPosition) {
         y_expand: true,
     });
 
-    const textEditor = new Clutter.Text({
-        font_name: `${fontFamily ? `${fontFamily} ` : ''}${contentFontSize}px`,
+    let textEditor = new Clutter.Text({
+        font_name: fontFamily ? `${fontFamily} ` : '',
         editable: true,
         selectable: true,
         reactive: true,
@@ -198,6 +195,49 @@ export function createNotesNode(config, width, height, xPosition, yPosition) {
 
     showNoteViewer();
     container.add_child(contentBox);
+
+    function applyScale(scale) {
+        const titleFontSize = Math.max(MIN_FONT_SIZE, Math.round(BASE_TITLE_FONT_SIZE * scale));
+        const contentFontSize = Math.max(MIN_FONT_SIZE, Math.round(BASE_CONTENT_FONT_SIZE * scale));
+        const iconSize = Math.max(MIN_ICON_SIZE, Math.round(BASE_ICON_SIZE * scale));
+
+        titleLabel.set_style(`${fontCss}color: ${textColor}; font-size: ${titleFontSize}px; opacity: ${SECONDARY_OPACITY};`);
+        editIcon.set_icon_size(iconSize);
+        displayLabel.set_style(`${fontCss}color: ${textColor}; font-size: ${contentFontSize}px;`);
+
+        const currentText = textEditor.text;
+        const wasEditing = isEditingActive;
+        editorContainer.remove_child(textEditor);
+        textEditor.destroy();
+        const newEditor = new Clutter.Text({
+            font_name: `${fontFamily ? `${fontFamily} ` : ''}${contentFontSize}px`,
+            editable: true,
+            selectable: true,
+            reactive: true,
+            line_wrap: true,
+            x_expand: true,
+            y_expand: true,
+        });
+        editorContainer.add_child(newEditor);
+        newEditor.text = currentText;
+        newEditor.set_color(editorContainer.get_theme_node().get_foreground_color());
+        newEditor.connect('text-changed', () => {
+            if (isEditingActive) {
+                noteContent = newEditor.text;
+                scheduleDeferredUpdate(state, 500, () => saveJsonToFile(notesFilePath, { notes: noteContent }));
+            }
+        });
+        textEditor = newEditor;
+        if (wasEditing) {
+            global.stage.set_key_focus(textEditor);
+        }
+    }
+
+    applyScale(Math.min(width / REF_WIDTH_PX, height / REF_HEIGHT_PX));
+    attachResponsiveScaler(container, REF_WIDTH_PX, REF_HEIGHT_PX, (_ratio, w, h) => {
+        if (isActorDestroyed(container)) return;
+        applyScale(Math.min(w / REF_WIDTH_PX, h / REF_HEIGHT_PX));
+    });
 
     loadJsonFromFileAsync(notesFilePath, (savedData, loadError) => {
         if (isActorDestroyed(container)) return;

@@ -17,6 +17,7 @@ const SET_BYTES_COGL_CONTEXT_SHELL_VERSION = 48;
 const RGBA_CHANNELS_COUNT = 4;
 const ALPHA_CHANNEL_OFFSET = 3;
 const PIXEL_CENTER_OFFSET = 0.5;
+const FILE_ENUM_BATCH_SIZE = 64;
 
 export function isSupportedImage(filename) {
     if (!filename) return false;
@@ -38,7 +39,6 @@ export function setImageContentBytes(imageContent, bytes, pixelFormat, width, he
     }
 }
 
-// Enumerates supported image files in a folder asynchronously.
 export async function listImagesInFolder(folderPath) {
     if (!folderPath) return [];
     const dir = Gio.File.new_for_path(folderPath);
@@ -64,11 +64,10 @@ export async function listImagesInFolder(folderPath) {
     }
 
     const images = [];
-    const PAGE_SIZE = 64;
     try {
         while (true) {
             const infos = await new Promise((resolve, reject) => {
-                enumerator.next_files_async(PAGE_SIZE, GLib.PRIORITY_DEFAULT, null, (_source, result) => {
+                enumerator.next_files_async(FILE_ENUM_BATCH_SIZE, GLib.PRIORITY_DEFAULT, null, (_source, result) => {
                     try {
                         resolve(enumerator.next_files_finish(result));
                     } catch (error) {

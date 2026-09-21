@@ -14,21 +14,13 @@ import {
 import { createAppSelectionControls } from './appSelection.js';
 import { createLiveCitySearchRow, buildOpenMeteoCitySearchRow } from './citySearch.js';
 import { buildCaptionRows } from './captionControls.js';
+import { DEFAULT_WORLD_CLOCK_CITIES, MIN_SLIDESHOW_INTERVAL_SEC, MAX_SLIDESHOW_INTERVAL_SEC, STEP_SLIDESHOW_INTERVAL_SEC, DEFAULT_SLIDESHOW_INTERVAL_SEC } from './widgetConstants.js';
+
+export { DEFAULT_WORLD_CLOCK_CITIES, MIN_SLIDESHOW_INTERVAL_SEC, MAX_SLIDESHOW_INTERVAL_SEC, STEP_SLIDESHOW_INTERVAL_SEC, DEFAULT_SLIDESHOW_INTERVAL_SEC } from './widgetConstants.js';
 
 const DIALOG_CONTENT_MARGIN_PX = 15;
 const DIALOG_CONTENT_SPACING_PX = 10;
 const DIALOG_GRID_SPACING_PX = 12;
-
-export const DEFAULT_WORLD_CLOCK_CITIES = Object.freeze([
-    { name: 'London', timezone: 'Europe/London' },
-    { name: 'New York', timezone: 'America/New_York' },
-    { name: 'Moscow', timezone: 'Europe/Moscow' },
-]);
-
-export const MIN_SLIDESHOW_INTERVAL_SEC = 5;
-export const MAX_SLIDESHOW_INTERVAL_SEC = 3600;
-export const STEP_SLIDESHOW_INTERVAL_SEC = 5;
-export const DEFAULT_SLIDESHOW_INTERVAL_SEC = 10;
 
 function createBaseWidgetAddDialog(parentWindow, title) {
     const dialog = new Gtk.Dialog({

@@ -20,6 +20,17 @@ const LARGE_LAYOUT_BASE_HEIGHT = 240;
 /** Shared D-Bus pollers keyed by player-filter config, so N widgets make 1 poll/s total. */
 const activeMusicPolls = new Map();
 
+/** Clears all active pollers; called from the extension's disable(). */
+export function clearMusicPolls() {
+    for (const poll of activeMusicPolls.values()) {
+        if (poll.timerId) {
+            GLib.Source.remove(poll.timerId);
+            poll.timerId = null;
+        }
+    }
+    activeMusicPolls.clear();
+}
+
 /**
  * Registers a per-second D-Bus fetch tick for a widget; widgets with identical
  * player filters share one poller. Returns the release function.

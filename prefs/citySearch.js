@@ -163,6 +163,11 @@ export function createLiveCitySearchRow(grid, labelTitle, defaultCity, rowIdx) {
             return;
         }
 
+        if (!cachedCitiesDatabase) {
+            statusLabel.set_markup(`<span size='x-small' alpha='70%'>Loading city database...</span>`);
+            scrolledWindow.set_visible(false);
+        }
+
         const cities = await getCitiesDatabase();
         if (requestId !== searchRequestSequence) return;
         const rawMatches = [];
@@ -170,7 +175,7 @@ export function createLiveCitySearchRow(grid, labelTitle, defaultCity, rowIdx) {
 
         for (let i = 0; i < cities.length; i++) {
             const item = cities[i];
-            if (item.name && item.name.toLowerCase().includes(query)) {
+            if (item.name && item.name.toLowerCase().replace(/[\s_]+/g, '').includes(normalizedQuery)) {
                 rawMatches.push(item);
             }
         }

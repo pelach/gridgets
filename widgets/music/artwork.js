@@ -23,6 +23,7 @@ const activeArtworkDownloads = new Map();
 const failedArtworkDownloadAttempts = new Map();
 
 const MUSIC_ART_CACHE_DIR = `${GLib.get_user_cache_dir()}/gridgets/music-art`;
+const FILE_ENUM_BATCH_SIZE = 20;
 
 export async function extractDominantColor(filePath) {
     if (dominantColorCache.has(filePath)) return dominantColorCache.get(filePath);
@@ -169,7 +170,7 @@ function findLatestModifiedPng(parentDir) {
                 }
 
                 const selectLatest = (latestPng, latestTime) => {
-                    enumerator.next_files_async(20, GLib.PRIORITY_DEFAULT, null, (enumSource, nextResult) => {
+                    enumerator.next_files_async(FILE_ENUM_BATCH_SIZE, GLib.PRIORITY_DEFAULT, null, (enumSource, nextResult) => {
                         let infos = null;
                         try {
                             infos = enumSource.next_files_finish(nextResult);
@@ -374,6 +375,7 @@ export function clearArtworkCaches() {
         cancellable.cancel();
     }
     activeArtworkDownloads.clear();
+    artworkDownloadQueue.clear();
     dominantColorCache.clear();
     artworkFileCache.clear();
     failedArtworkDownloadAttempts.clear();

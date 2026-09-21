@@ -46,7 +46,7 @@ export default class GridgetsPreferences extends ExtensionPreferences {
         // cramped or overflows; fill the monitor instead.
         if (smallScreen)
             window.maximize();
-        window.set_search_enabled(true);
+        window.set_search_enabled(false);
 
         const settings = this.getSettings();
         const extensionPath = this.path;

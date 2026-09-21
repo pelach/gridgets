@@ -23,7 +23,9 @@ function createColorRow(title, subtitle, settings, key, defaultVal = DEFAULT_FG_
     const row = new Adw.ActionRow({ title, subtitle });
     const btn = new Gtk.ColorButton({ valign: Gtk.Align.CENTER });
     const rgba = new Gdk.RGBA();
-    rgba.parse(settings.get_string(key) || defaultVal);
+    const parsed = rgba.parse(settings.get_string(key) || defaultVal);
+    if (!parsed)
+        rgba.parse(defaultVal);
     btn.set_rgba(rgba);
     btn.connect('color-set', () => {
         settings.set_string(key, btn.get_rgba().to_string());
@@ -33,11 +35,9 @@ function createColorRow(title, subtitle, settings, key, defaultVal = DEFAULT_FG_
 }
 
 export function createSwitchRow(title, subtitle, settings, key) {
-    const row = new Adw.ActionRow({ title, subtitle });
-    const sw = new Gtk.Switch({ valign: Gtk.Align.CENTER });
-    settings.bind(key, sw, 'active', Gio.SettingsBindFlags.DEFAULT);
-    row.add_suffix(sw);
-    return { row, switch: sw };
+    const row = new Adw.SwitchRow({ title, subtitle });
+    settings.bind(key, row, 'active', Gio.SettingsBindFlags.DEFAULT);
+    return { row };
 }
 
 export function buildGlobalAestheticsGroup(settings) {

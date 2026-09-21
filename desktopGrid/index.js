@@ -35,6 +35,7 @@ import { createWidgetNode } from './widgetFactory.js';
 import { attachDragHandlers } from './dragDrop.js';
 import {
     openContextMenu,
+    removeContextMenu,
 } from './contextMenu.js';
 import { isActorDestroyed, watchActorLifecycle } from '../utils/actorLifecycle.js';
 import { resolveWeatherLayoutVariant } from '../widgets/weather/weatherCommon.js';
@@ -111,16 +112,7 @@ export const DesktopGrid = GObject.registerClass(
 
             this.interfaceSettings = null;
 
-            if (this.contextMenu) {
-                this.contextMenu.destroy();
-                this.contextMenu = null;
-            }
-
-            if (this._contextMenuDummyActor) {
-                const dummyParent = this._contextMenuDummyActor.get_parent();
-                if (dummyParent) dummyParent.remove_child(this._contextMenuDummyActor);
-                this._contextMenuDummyActor = null;
-            }
+            removeContextMenu(this);
 
             if (this._backgroundPressId) {
                 this.disconnect(this._backgroundPressId);
@@ -453,8 +445,11 @@ export const DesktopGrid = GObject.registerClass(
             this.widgetNodes.forEach(node => node.destroy());
             this.widgetNodes.clear();
             this._nodeConfigs.clear();
+            if (this._gridLineCanvas) {
+                this._gridLineCanvas.destroy();
+                this._gridLineCanvas = null;
+            }
             this.destroy_all_children();
-            this._gridLineCanvas = null;
 
             this.editOverlayCanvases.forEach(box => box.destroy());
             this.editOverlayCanvases = [];
@@ -500,22 +495,6 @@ export const DesktopGrid = GObject.registerClass(
         }
 
         _toggleGridLines() {
-            if (this._gridLineCanvas) {
-                this._gridLineCanvas.destroy();
-                this._gridLineCanvas = null;
-            }
-
-            if (this.settings.get_boolean('show-grid')) {
-                const accentColor = readGlobalSettings(this.settings, this.interfaceSettings).globalAccentColor;
-                const accent = parseCssColor(accentColor);
-                this._gridLineCanvas = createGridOverlay(
-                    this.gridCols || COLUMNS_COUNT,
-                    this.gridRows || ROWS_COUNT,
-                    this.cellTotalWidth,
-                    this.gridMargin,
-                    accent.r, accent.g, accent.b, GRID_LINE_ALPHA
-                );
-                this.insert_child_at_index(this._gridLineCanvas, 0);
-            }
+            this._syncGridLines();
         }
     });
