@@ -105,29 +105,31 @@ bit_format = 8bit
         }
     }
 
-    function getThemeAccentRgba(cfg, settings) {
-        // 1. Ha a widgeten be van kapcsolva az egyéni szín (overrideColors):
-        if (cfg.overrideColors && cfg.fgColor) {
-            const rgbMatch = cfg.fgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
-            if (rgbMatch) {
-                return [parseInt(rgbMatch[1], 10) / 255, parseInt(rgbMatch[2], 10) / 255, parseInt(rgbMatch[3], 10) / 255, 0.85];
-            }
+    function getThemeAccentRgba(cfg) {
+        const colorStr = resolveWidgetForegroundColor(cfg);
+        // 1. rgb(...) vagy rgba(...) értelmezése
+        const rgbMatch = colorStr?.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+        if (rgbMatch) {
+            return [
+                parseInt(rgbMatch[1], 10) / 255,
+                parseInt(rgbMatch[2], 10) / 255,
+                parseInt(rgbMatch[3], 10) / 255,
+                0.85
+            ];
         }
 
-        // 2. Globális Accent Color lekérése a GSettings-ből (ha létezik ilyen kulcs a sémában)
-        try {
-            if (settings) {
-                const accent = settings.get_string('accent-color-override') || settings.get_string('global-accent-color');
-                if (accent) {
-                    const m = accent.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-                    if (m) {
-                        return [parseInt(m[1], 16) / 255, parseInt(m[2], 16) / 255, parseInt(m[3], 16) / 255, 0.85];
-                    }
-                }
-            }
-        } catch (e) {}
+        // 2. Hex (#RRGGBB) értelmezése
+        const hexMatch = colorStr?.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+        if (hexMatch) {
+            return [
+                parseInt(hexMatch[1], 16) / 255,
+                parseInt(hexMatch[2], 16) / 255,
+                parseInt(hexMatch[3], 16) / 255,
+                0.85
+            ];
+        }
 
-        // 3. GNOME alapértelmezett kék kiemelőszín (#3584e4)
+        // 3. Biztonsági tartalék (GNOME kék)
         return [0.208, 0.518, 0.894, 0.85];
     }
 
