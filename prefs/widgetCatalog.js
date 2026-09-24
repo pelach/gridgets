@@ -225,6 +225,13 @@ export const STORE_WIDGETS = Object.freeze({
         thumbnail: 'system-utils/resource-wheel.svg',
         fallbackIconName: 'utilities-system-monitor-symbolic',
     },
+    currencyTracker: {
+        title: 'Currency Tracker',
+        description: 'Track exchange rates with 7-day trend chart via Frankfurter.',
+        gridSize: '3x2',
+        thumbnail: 'currency-tracker/currencytracker.svg',
+        fallbackIconName: 'bank-symbolic',
+    },
 });
 
 export const STORE_CATEGORIES = Object.freeze({
@@ -249,7 +256,8 @@ export const STORE_CATEGORIES = Object.freeze({
         'rssHeadlinesWidget',
         'moodWidget',
         'systemInfo',
-        'resourceWheel'
+        'resourceWheel',
+        'currencyTracker'
     ],
 });
 
@@ -335,6 +343,8 @@ function getStoreWidgetKey(widget) {
             return 'systemInfo';
         case 'resource-wheel': 
             return 'resourceWheel';
+        case 'currency-tracker':
+            return 'currencyTracker';
         default:
             return null;
     }
@@ -393,6 +403,11 @@ export function getWidgetDetailText(widget) {
             return '';
         case 'system-info':
             return `Metric: ${(widget.systemInfoType || 'CPU').toUpperCase()}`;
+        case 'currency-tracker': {
+            const base = (widget.baseCurrency || 'EUR').toUpperCase();
+            const target = (widget.targetCurrency || 'HUF').toUpperCase();
+            return `Pair: ${base} / ${target}`;
+        }
         default:
             return '';
     }

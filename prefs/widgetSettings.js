@@ -613,3 +613,50 @@ export function buildSystemInfoSettings(grid, rowIdx, widget, saveHandlers) {
 
     return rowIdx;
 }
+
+export function buildCurrencyTrackerSettings(grid, rowIdx, widget, saveHandlers) {
+    // A Frankfurter / EKB által hivatalosan támogatott devizák listája
+    const SUPPORTED_CURRENCIES = [
+        'EUR', 'HUF', 'USD', 'GBP', 'CHF', 'CZK', 'PLN', 'AUD', 'BGN', 'BRL',
+        'CAD', 'CNY', 'DKK', 'HKD', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW',
+        'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'RON', 'SEK', 'SGD', 'THB', 'TRY', 'ZAR'
+    ];
+
+    // ── Alap deviza (From / Base) ─────────────────────────────
+    const baseLabel = new Gtk.Label({ label: 'Base Currency (From):', xalign: 0, hexpand: true });
+    const baseCombo = new Gtk.DropDown({
+        model: Gtk.StringList.new(SUPPORTED_CURRENCIES),
+        valign: Gtk.Align.CENTER,
+        halign: Gtk.Align.END,
+    });
+    const currentBase = (widget.baseCurrency || 'EUR').toUpperCase();
+    const baseIdx = SUPPORTED_CURRENCIES.indexOf(currentBase);
+    baseCombo.set_selected(baseIdx >= 0 ? baseIdx : 0);
+
+    grid.attach(baseLabel, 0, rowIdx, 1, 1);
+    grid.attach(baseCombo, 1, rowIdx, 1, 1);
+    rowIdx++;
+
+    // ── Cél deviza (To / Target) ──────────────────────────────
+    const targetLabel = new Gtk.Label({ label: 'Target Currency (To):', xalign: 0, hexpand: true });
+    const targetCombo = new Gtk.DropDown({
+        model: Gtk.StringList.new(SUPPORTED_CURRENCIES),
+        valign: Gtk.Align.CENTER,
+        halign: Gtk.Align.END,
+    });
+    const currentTarget = (widget.targetCurrency || 'HUF').toUpperCase();
+    const targetIdx = SUPPORTED_CURRENCIES.indexOf(currentTarget);
+    targetCombo.set_selected(targetIdx >= 0 ? targetIdx : SUPPORTED_CURRENCIES.indexOf('HUF'));
+
+    grid.attach(targetLabel, 0, rowIdx, 1, 1);
+    grid.attach(targetCombo, 1, rowIdx, 1, 1);
+    rowIdx++;
+
+    // Mentéskor biztosan a tömbből választott, garantáltan létező devizakód kerül elmentésre
+    saveHandlers.push((target) => {
+        target.baseCurrency = SUPPORTED_CURRENCIES[baseCombo.get_selected()] || 'EUR';
+        target.targetCurrency = SUPPORTED_CURRENCIES[targetCombo.get_selected()] || 'HUF';
+    });
+
+    return rowIdx;
+}

@@ -188,3 +188,12 @@ export function addResourceWheelWidget(settings, width = 4, height = 3) {
         type: 'resource-wheel',
     }, width, height);
 }
+
+export function addCurrencyTrackerWidget(settings, width = 3, height = 2) {
+    addWidget(settings, {
+        id: nextWidgetId(settings, 'currency-tracker'),
+        type: 'currency-tracker',
+        baseCurrency: 'EUR',
+        targetCurrency: 'HUF',
+    }, width, height);
+}

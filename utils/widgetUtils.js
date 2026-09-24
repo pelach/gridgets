@@ -44,6 +44,7 @@ export const MIN_WIDGET_SIZES = Object.freeze({
     'calendar-grid': { minCols: 4, minRows: 4 },
     'mood': { minCols: 4, minRows: 2 },
     'battery-status': { minCols: 4, minRows: 4 },
+    'currency-tracker': { minCols: 3, minRows: 2 },
 });
 
 /**
@@ -466,6 +467,7 @@ const SIZE_PRESETS = {
     'github': [[8, 4], [10, 5], [12, 6]],
     'mood': [[6, 3], [8, 4], [10, 5]],
     'rss-headlines': [[4, 4], [5, 5], [6, 6]],
+    'currency-tracker': [[3, 2], [5, 3], [7, 4]]
 };
 
 export const FREE_FLOW_SIZE_TYPES = ['image', 'slideshow'];

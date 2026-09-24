@@ -13,6 +13,7 @@ import {
     buildGifSettings,
     buildImageSettings,
     buildSystemInfoSettings,
+    buildCurrencyTrackerSettings,
 } from './widgetSettings.js';
 
 export function buildWidgetEditPanel(parentWindow, widget, settings, onSavedCallback) {
@@ -66,8 +67,11 @@ export function buildWidgetEditPanel(parentWindow, widget, settings, onSavedCall
         case 'image':
             rowIdx = buildImageSettings(grid, rowIdx, widget, settings, saveHandlers, parentWindow);
             break;
-        case 'system-info': // <-- EZT SZÚRD BE!
+        case 'system-info':
             rowIdx = buildSystemInfoSettings(grid, rowIdx, widget, saveHandlers);
+            break;
+        case 'currency-tracker':
+            rowIdx = buildCurrencyTrackerSettings(grid, rowIdx, widget, saveHandlers);
             break;
     }
 

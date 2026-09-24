@@ -24,7 +24,8 @@ import {
     addTodoWidget,
     addMoodWidget,
     addSystemInfoWidget,
-    addResourceWheelWidget
+    addResourceWheelWidget,
+    addCurrencyTrackerWidget
 } from './widgetAdders.js';
 
 import {
@@ -249,6 +250,7 @@ export function buildStorePage(window, settings, extensionPath) {
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.rssHeadlinesWidget, () => openAddRssHeadlinesDialog(window, settings)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.quotesWidget, () => addQuotesWidget(settings)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.moodWidget, () => addMoodWidget(settings)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.currencyTracker, () => addCurrencyTrackerWidget(settings, 3, 2)),
     ]));
 
     // Raise PreferencesPage's internal ~600px clamp so the grid grows with the window.

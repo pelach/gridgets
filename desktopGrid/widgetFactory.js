@@ -22,6 +22,7 @@ import { createTodoNode } from '../widgets/todo.js';
 import { createGithubNode } from '../widgets/github.js';
 import { createSunScheduleNode } from '../widgets/solarSchedule.js';
 import { createRssHeadlinesNode } from '../widgets/rssHeadlines.js';
+import { createCurrencyTrackerNode } from '../widgets/currencyTracker.js';
 import { createMoodNode } from '../widgets/moodLogger.js';
 import {
     createStaticImageNode,
@@ -51,6 +52,7 @@ const WIDGET_CREATORS = {
     'system-info': (data, w, h, x, y) => createSystemInfoNode(data, w, h, x, y),
     'pomodoro': (data, w, h, x, y) => createPomodoroNode(data, w, h, x, y),
     'pomodoro-focus': (data, w, h, x, y) => createPomodoroFocusNode(data, w, h, x, y),
+    'currency-tracker': (data, w, h, x, y) => createCurrencyTrackerNode(data, w, h, x, y),
     'app-launcher': (data, w, h, x, y) => createAppLauncherNode(data, w, h, x, y),
     'calendar': (data, w, h, x, y) => createCalendarNode(data, w, h, x, y),
     'quotes': (data, w, h, x, y) => createQuotesNode(data, w, h, x, y),
