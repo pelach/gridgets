@@ -23,6 +23,7 @@ import {
     addCalendarGridWidget,
     addTodoWidget,
     addMoodWidget,
+    addSystemInfoWidget,
 } from './widgetAdders.js';
 
 import {
@@ -218,6 +219,7 @@ export function buildStorePage(window, settings, extensionPath) {
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.systemMonitor, () => addCpuRamWidget(settings, 4, 2)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.networkSpeed, () => addNetworkSpeedWidget(settings, 3, 2)),
         createDesktopWidgetCard(extensionPath, STORE_WIDGETS.screenTimeWidget, () => addScreenTimeWidget(settings)),
+        createDesktopWidgetCard(extensionPath, STORE_WIDGETS.systemInfo, () => addSystemInfoWidget(settings, 'cpu', 2, 2)),
     ]));
 
     // ── Focus & Productivity ─────────────────────────────────

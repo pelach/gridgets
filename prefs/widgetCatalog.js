@@ -211,6 +211,13 @@ export const STORE_WIDGETS = Object.freeze({
         thumbnail: 'solar-schedule/solar-schedule.svg',
         fallbackIconName: 'daytime-sunset-symbolic',
     },
+    systemInfo: {
+        title: 'System Info',
+        description: 'Compact tile showing real-time CPU, RAM, or Disk utilization.',
+        gridSize: '2x2',
+        thumbnail: 'system-utils/system-monitor.svg', 
+        fallbackIconName: 'utilities-system-monitor-symbolic',
+    },
 });
 
 export const STORE_CATEGORIES = Object.freeze({
@@ -234,6 +241,7 @@ export const STORE_CATEGORIES = Object.freeze({
         'todoWidget',
         'rssHeadlinesWidget',
         'moodWidget',
+        'systemInfo',
     ],
 });
 
@@ -315,6 +323,8 @@ function getStoreWidgetKey(widget) {
             return 'moodWidget';
         case 'sun-schedule':
             return 'sunScheduleWidget';
+        case 'system-info':
+            return 'systemInfo';
         default:
             return null;
     }
@@ -371,6 +381,8 @@ export function getWidgetDetailText(widget) {
                 return `Skin: ${widget.skin || 'basic'}`;
             }
             return '';
+        case 'system-info':
+            return `Metric: ${(widget.systemInfoType || 'CPU').toUpperCase()}`;
         default:
             return '';
     }

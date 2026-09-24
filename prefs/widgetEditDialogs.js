@@ -12,6 +12,7 @@ import {
     buildSlideshowSettings,
     buildGifSettings,
     buildImageSettings,
+    buildSystemInfoSettings,
 } from './widgetSettings.js';
 
 export function buildWidgetEditPanel(parentWindow, widget, settings, onSavedCallback) {
@@ -64,6 +65,9 @@ export function buildWidgetEditPanel(parentWindow, widget, settings, onSavedCall
             break;
         case 'image':
             rowIdx = buildImageSettings(grid, rowIdx, widget, settings, saveHandlers, parentWindow);
+            break;
+        case 'system-info': // <-- EZT SZÚRD BE!
+            rowIdx = buildSystemInfoSettings(grid, rowIdx, widget, saveHandlers);
             break;
     }
 

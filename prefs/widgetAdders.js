@@ -173,3 +173,11 @@ export function addImageWidget(settings, imagePath, caption = 'My Image', showCa
 export function addBatteryStatusWidget(settings, width = 4, height = 3) {
     addWidget(settings, { id: nextWidgetId(settings, 'battery-status'), type: 'battery-status' }, width, height);
 }
+
+export function addSystemInfoWidget(settings, systemInfoType = 'cpu', width = 2, height = 2) {
+    addWidget(settings, {
+        id: nextWidgetId(settings, 'system-info'),
+        type: 'system-info',
+        systemInfoType,
+    }, width, height);
+}

@@ -9,7 +9,8 @@ import {
     createCpuRamNode,
     createNetworkSpeedNode,
     createSystemDashboardNode,
-    createBatteryStatusNode
+    createBatteryStatusNode,
+    createSystemInfoNode
 } from '../widgets/system/index.js';
 import { createPomodoroNode } from '../widgets/pomodoro.js';
 import { createPomodoroFocusNode } from '../widgets/pomodoroFocus.js';
@@ -45,6 +46,7 @@ const WIDGET_CREATORS = {
     'network-speed': (data, w, h, x, y) => createNetworkSpeedNode(data, w, h, x, y),
     'system-dashboard': (data, w, h, x, y) => createSystemDashboardNode(data, w, h, x, y),
     'battery-status': (data, w, h, x, y) => createBatteryStatusNode(data, w, h, x, y),
+    'system-info': (data, w, h, x, y) => createSystemInfoNode(data, w, h, x, y),
     'pomodoro': (data, w, h, x, y) => createPomodoroNode(data, w, h, x, y),
     'pomodoro-focus': (data, w, h, x, y) => createPomodoroFocusNode(data, w, h, x, y),
     'app-launcher': (data, w, h, x, y) => createAppLauncherNode(data, w, h, x, y),

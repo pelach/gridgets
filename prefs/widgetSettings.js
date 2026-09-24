@@ -587,3 +587,29 @@ export function buildImageSettings(grid, rowIdx, widget, settings, saveHandlers,
 
     return rowIdx;
 }
+
+export function buildSystemInfoSettings(grid, rowIdx, widget, saveHandlers) {
+    const typeLabel = new Gtk.Label({ label: 'Monitor Metric:', xalign: 0, hexpand: true });
+    const types = ['cpu', 'ram', 'disk', 'thermal'];
+    const typeNames = ['CPU Usage', 'RAM Usage', 'Disk Usage', 'Thermal'];
+
+    const typeCombo = new Gtk.DropDown({
+        model: Gtk.StringList.new(typeNames),
+        valign: Gtk.Align.CENTER,
+        halign: Gtk.Align.END,
+    });
+
+    const currentType = (widget.systemInfoType || 'cpu').toLowerCase();
+    const currentIdx = types.indexOf(currentType);
+    typeCombo.set_selected(currentIdx >= 0 ? currentIdx : 0);
+
+    grid.attach(typeLabel, 0, rowIdx, 1, 1);
+    grid.attach(typeCombo, 1, rowIdx, 1, 1);
+    rowIdx++;
+
+    saveHandlers.push((target) => {
+        target.systemInfoType = types[typeCombo.get_selected()] || 'cpu';
+    });
+
+    return rowIdx;
+}
