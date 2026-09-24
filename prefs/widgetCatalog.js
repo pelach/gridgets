@@ -215,7 +215,14 @@ export const STORE_WIDGETS = Object.freeze({
         title: 'System Info',
         description: 'Compact tile showing real-time CPU, RAM, or Disk utilization.',
         gridSize: '2x2',
-        thumbnail: 'system-utils/system-monitor.svg', 
+        thumbnail: 'system-utils/system-info.svg', 
+        fallbackIconName: 'utilities-system-monitor-symbolic',
+    },
+    resourceWheel: {
+        title: 'Resource Wheel',
+        description: 'Circular hardware telemetry showing CPU, RAM, Disk, and Temp.',
+        gridSize: '4x3',
+        thumbnail: 'system-utils/resource-wheel.svg',
         fallbackIconName: 'utilities-system-monitor-symbolic',
     },
 });
@@ -242,6 +249,7 @@ export const STORE_CATEGORIES = Object.freeze({
         'rssHeadlinesWidget',
         'moodWidget',
         'systemInfo',
+        'resourceWheel'
     ],
 });
 
@@ -325,6 +333,8 @@ function getStoreWidgetKey(widget) {
             return 'sunScheduleWidget';
         case 'system-info':
             return 'systemInfo';
+        case 'resource-wheel': 
+            return 'resourceWheel';
         default:
             return null;
     }

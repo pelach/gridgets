@@ -181,3 +181,10 @@ export function addSystemInfoWidget(settings, systemInfoType = 'cpu', width = 2,
         systemInfoType,
     }, width, height);
 }
+
+export function addResourceWheelWidget(settings, width = 4, height = 3) {
+    addWidget(settings, {
+        id: nextWidgetId(settings, 'resource-wheel'),
+        type: 'resource-wheel',
+    }, width, height);
+}

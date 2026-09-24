@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <style>
+      .bg { fill: #222226; rx: 16px; ry: 16px; stroke: rgba(255, 255, 255, 0.14); stroke-width: 1.2; }
+      .badge-bg { fill: rgba(255, 255, 255, 0.10); rx: 7px; ry: 7px; }
+      .icon-stroke { fill: none; stroke: #ffffff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+      .icon-frame { fill: none; stroke: #ffffff; stroke-width: 1.2; rx: 3px; ry: 3px; opacity: 0.85; }
+      .val-text { font-family: 'Google Sans', 'Ubuntu', 'Cantarell', sans-serif; font-size: 21px; font-weight: 700; fill: #ffffff; }
+      .sub-text { font-family: 'Google Sans', 'Ubuntu', 'Cantarell', sans-serif; font-size: 11px; font-weight: 500; fill: #ffffff; opacity: 0.65; }
+    </style>
+  </defs>
+
+  <!-- Kártya alap -->
+  <rect class="bg" x="2" y="2" width="116" height="116" />
+
+  <!-- Jobb felső Jelvény + Ikon -->
+  <rect class="badge-bg" x="80" y="14" width="26" height="26" />
+  <!-- Ikon keret és monitor pulzus -->
+  <rect class="icon-frame" x="84.5" y="18.5" width="17" height="17" />
+  <path class="icon-stroke" d="M 87 27.5 L 90 27.5 L 92 23 L 94.5 31 L 96.5 27.5 L 99 27.5" />
+
+  <!-- Érték és címke -->
+  <text class="val-text" x="16" y="84">11%</text>
+  <text class="sub-text" x="16" y="100">CPU</text>
+</svg>

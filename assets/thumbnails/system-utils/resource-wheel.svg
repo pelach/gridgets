@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <defs>
+    <style>
+      .bg { fill: #222226; rx: 14px; ry: 14px; stroke: rgba(255, 255, 255, 0.14); stroke-width: 1.2; }
+      .pill-bg { fill: rgba(255, 255, 255, 0.08); rx: 6px; ry: 6px; }
+      .pill-text { font-family: 'Google Sans', 'Ubuntu', 'Cantarell', sans-serif; font-size: 6px; font-weight: 700; fill: #ffffff; letter-spacing: 0.6px; }
+      .track { fill: none; stroke-width: 2.8; stroke-linecap: round; opacity: 0.15; }
+      .arc { fill: none; stroke-width: 2.8; stroke-linecap: round; }
+      .center-val { font-family: 'Google Sans', 'Ubuntu', 'Cantarell', sans-serif; font-size: 9px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .center-sub { font-family: 'Google Sans', 'Ubuntu', 'Cantarell', sans-serif; font-size: 5.5px; font-weight: 700; fill: #90caf9; text-anchor: middle; }
+      .legend-text { font-family: 'Google Sans', 'Ubuntu', 'Cantarell', sans-serif; font-size: 7px; font-weight: 500; fill: #ffffff; }
+      .footer-text { font-family: 'Google Sans', 'Ubuntu', 'Cantarell', sans-serif; font-size: 5.5px; fill: #ffffff; opacity: 0.45; }
+    </style>
+  </defs>
+
+  <!-- Kártya alap -->
+  <rect class="bg" x="2" y="2" width="156" height="116" />
+
+  <!-- Fejléc kapszula -->
+  <rect class="pill-bg" x="12" y="10" width="68" height="13" />
+  <circle cx="18" cy="16.5" r="2" fill="#90caf9" />
+  <text class="pill-text" x="23" y="18.5">RESOURCE WHEEL</text>
+
+  <!-- ── Kerék (Középpont: cx=48, cy=63) ── -->
+  <!-- 1. Disk (sárga, külső r=25) -->
+  <circle class="track" cx="48" cy="63" r="25" stroke="#fff59d" />
+  <path class="arc" stroke="#fff59d" d="M 48 38 A 25 25 0 0 1 68 78" />
+
+  <!-- 2. RAM (zöld, r=20) -->
+  <circle class="track" cx="48" cy="63" r="20" stroke="#a5d6a7" />
+  <path class="arc" stroke="#a5d6a7" d="M 48 43 A 20 20 0 0 1 68 63" />
+
+  <!-- 3. Temp (korall, r=15) -->
+  <circle class="track" cx="48" cy="63" r="15" stroke="#ef9a9a" />
+  <path class="arc" stroke="#ef9a9a" d="M 48 48 A 15 15 0 1 1 35 70" />
+
+  <!-- 4. CPU (kék, belső r=10) -->
+  <circle class="track" cx="48" cy="63" r="10" stroke="#90caf9" />
+  <path class="arc" stroke="#90caf9" d="M 48 53 A 10 10 0 0 1 56 57" />
+
+  <!-- Középső szöveg -->
+  <text class="center-val" x="48" y="62">7%</text>
+  <text class="center-sub" x="48" y="68">CPU</text>
+
+  <!-- ── Jobb oldali Legenda (x=94) ── -->
+  <!-- CPU -->
+  <circle cx="94" cy="46" r="2" fill="#90caf9" />
+  <text class="legend-text" x="100" y="48">CPU: 7%</text>
+
+  <!-- RAM -->
+  <circle cx="94" cy="57" r="2" fill="#a5d6a7" />
+  <text class="legend-text" x="100" y="59">RAM: 25%</text>
+
+  <!-- Disk -->
+  <circle cx="94" cy="68" r="2" fill="#fff59d" />
+  <text class="legend-text" x="100" y="70">Disk: 35%</text>
+
+  <!-- Temp -->
+  <circle cx="94" cy="79" r="2" fill="#ef9a9a" />
+  <text class="legend-text" x="100" y="81">Temp: 55°</text>
+
+  <!-- Lábléc -->
+  <text class="footer-text" x="12" y="106">Hardware telemetry updated in real time</text>
+</svg>

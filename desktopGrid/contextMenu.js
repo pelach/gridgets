@@ -67,7 +67,17 @@ export function openPreferences(grid, targetWidgetId = null) {
     }
     const extension = Extension.lookupByUUID(grid.metadata.uuid);
     if (!extension) return;
-    extension.openPreferences();
+    
+    try {
+        const promise = extension.openPreferences();
+        if (promise && typeof promise.catch === 'function') {
+            promise.catch((err) => {
+                console.warn('Gridgets: Could not open preferences window:', err?.message || err);
+            });
+        }
+    } catch (e) {
+        console.warn('Gridgets: Synchronous error opening preferences:', e?.message || e);
+    }
 }
 
 /** Opens a GNOME Settings panel through GIO's app launcher instead of a raw fork/exec. */
